@@ -19,10 +19,7 @@ import utils
 from vad_dataloader import VadDataset
 from model.preAE import PreAE
 
-
-# 要删的
 import torchvision.transforms as transforms
-import torch.optim as optim
 
 
 def train(config):
