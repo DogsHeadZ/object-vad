@@ -19,6 +19,8 @@ def np_load_frame(filename, resize_height, resize_width):
     image_decoded = cv2.imread(filename)
     image_resized = cv2.resize(image_decoded, (resize_width, resize_height))
     # image_resized = image_resized.astype(dtype=np.float32)
+    # image_resized = (image_resized )/255.0
+
     # image_resized = (image_resized / 127.5) - 1.0
     return image_resized
 
@@ -59,7 +61,8 @@ class VadDataset(data.Dataset):
     def __getitem__(self, index):
         video_name = self.samples[index].split('/')[-2]      #self.samples[index]取到本次迭代取到的视频首帧，根据首帧能够得到其所属类别及图片名
         frame_name = int(self.samples[index].split('/')[-1].split('.')[-2])
-        
+        video_name = '01'
+        frame_name = 5
         batch = []
         for i in range(self._time_step+self._num_pred):
             image = np_load_frame(self.videos[video_name]['frame'][frame_name+i], self._resize_height, self._resize_width)   #根据首帧图片名便可加载一段视频片段
