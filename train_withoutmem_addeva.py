@@ -107,9 +107,11 @@ def train(config):
         model.train()
         for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
             imgs = imgs.cuda()
-            outputs, _, = model(imgs[:, 0: base_channel_num])
+            input = imgs[:, :-1, ].view(imgs.shape[0], -1, imgs.shape[-2], imgs.shape[-1])
+            target = imgs[:, -1, ]
+            outputs, _, = model(input)
             optimizer.zero_grad()
-            loss_pixel = torch.mean(loss_func_mse(outputs, imgs[:, base_channel_num:]))
+            loss_pixel = torch.mean(loss_func_mse(outputs, target))
             loss = loss_pixel
             loss.backward()
             optimizer.step()
@@ -134,8 +136,10 @@ def train(config):
                 video_num += 1
                 label_length += videos[videos_list[video_num].split('/')[-1]]['length']
             imgs = imgs.cuda()
-            outputs, feas = model.forward(imgs[:, 0: base_channel_num])
-            mse_imgs = torch.mean(loss_func_mse((outputs[0] + 1) / 2, (imgs[0, base_channel_num:] + 1) / 2)).item()
+            input = imgs[:, :-1, ].view(imgs.shape[0], -1, imgs.shape[-2], imgs.shape[-1])
+            target = imgs[:, -1, ]
+            outputs, feas = model.forward(input)
+            mse_imgs = torch.mean(loss_func_mse((outputs + 1) / 2, (target + 1) / 2)).item()
             psnr_list[videos_list[video_num].split('/')[-1]].append(utils.psnr(mse_imgs))
 
         # Measuring the abnormality score and the AUC

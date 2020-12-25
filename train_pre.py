@@ -39,9 +39,7 @@ def train(config):
     svname = args.name
     if svname is None:
         svname = config['train_dataset_type'] + '_' + config['model']
-        # svname += '_' + config['model_args']['encoder']
-        # if config['model_args']['classifier'] != 'linear-classifier':
-        #     svname += '-' + config['model_args']['classifier']
+
     if args.tag is not None:
         svname += '_' + args.tag
     save_path = os.path.join('./save', svname)
@@ -109,6 +107,12 @@ def train(config):
     flow_network.load_state_dict(torch.load(lite_flow_model_path))
     flow_network.eval()
 
+    # different range with the source version, should change
+    lam_int = 1.0 * 2
+    lam_gd = 1.0 * 2
+    # here we use no flow loss
+    lam_op = 0  # 2.0
+    lam_adv = 0.05
     adversarial_loss = Adversarial_Loss()
     discriminate_loss = Discriminate_Loss()
     gd_loss = Gradient_Loss(alpha, train_dataset_args['c'])
@@ -125,8 +129,8 @@ def train(config):
 
     g_lr = 0.0002
     d_lr = 0.00002
-    optimizer_G=torch.optim.Adam(generator.parameters(),lr=g_lr)
-    optimizer_D=torch.optim.Adam(discriminator.parameters(),lr=d_lr)
+    optimizer_G = torch.optim.Adam(generator.parameters(),lr=g_lr)
+    optimizer_D = torch.optim.Adam(discriminator.parameters(),lr=d_lr)
 
     # # optimizer setting
     # params_encoder = list(model.encoder.parameters())
@@ -168,72 +172,106 @@ def train(config):
         generator.train()
         for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
             imgs = imgs.cuda()
-            outputs = generator(imgs[:, 0: base_channel_num])
-            input0=imgs[:,0:3,]
-            input1 = imgs[:, 3:6, ]
+            input = imgs[:, :-1, ]
+            input_last = input[:, -1, ]
+            target = imgs[:, -1, ]
+            input = input.view(input.shape[0], -1, input.shape[-2],input.shape[-1])
 
-            gt_flow_esti_tensor = torch.cat([input0, input1], 1)
+            # only for debug
+            # input0=imgs[:, 0,]
+            # input1 = imgs[:, 1, ]
+            # gt_flow_esti_tensor = torch.cat([input0, input1], 1)
+            # flow_gt = batch_estimate(gt_flow_esti_tensor, flow_network)[0]
+            # objectOutput = open('./out_train.flo', 'wb')
+            # np.array([80, 73, 69, 72], np.uint8).tofile(objectOutput)
+            # np.array([flow_gt.size(2), flow_gt.size(1)], np.int32).tofile(objectOutput)
+            # np.array(flow_gt.detach().cpu().numpy().transpose(1, 2, 0), np.float32).tofile(objectOutput)
+            # objectOutput.close()
+            # break
 
-            flow_gt = batch_estimate(gt_flow_esti_tensor, flow_network)[0]
-            print(flow_gt.shape)
-            # save flow for test
-            objectOutput = open('./out_train.flo', 'wb')
-            np.array([80, 73, 69, 72], np.uint8).tofile(objectOutput)
-            np.array([flow_gt.size(2), flow_gt.size(1)], np.int32).tofile(objectOutput)
-            np.array(flow_gt.detach().cpu().numpy().transpose(1, 2, 0), np.float32).tofile(objectOutput)
-            objectOutput.close()
-            break
+            # ------- update optim_G --------------
+            outputs = generator(input)
+            pred_flow_tensor = torch.cat([input_last, outputs], 1)
+            gt_flow_tensor = torch.cat([input_last, target], 1)
+            flow_pred = batch_estimate(pred_flow_tensor, flow_network)
+            flow_gt = batch_estimate(gt_flow_tensor, flow_network)
+
+            g_adv_loss = adversarial_loss(discriminator(outputs))
+            g_op_loss = op_loss(flow_pred, flow_gt)
+            g_int_loss = int_loss(outputs, target)
+            g_gd_loss = gd_loss(outputs, target)
+            g_loss = lam_adv * g_adv_loss + lam_gd * g_gd_loss + lam_op * g_op_loss + lam_int * g_int_loss
 
             optimizer_G.zero_grad()
-            loss_pixel = torch.mean(int_loss(outputs, imgs[:, base_channel_num:]))
-            loss = loss_pixel
-            loss.backward()
+            g_loss.backward()
             optimizer_G.step()
+
+            train_psnr = utils.psnr_error(outputs,target)
+
+            # ----------- update optim_D -------
+            optimizer_D.zero_grad()
+            d_loss = discriminate_loss(discriminator(target), discriminator(outputs.detach()))
+            d_loss.backward()
+            optimizer_D.step()
+
         # lr_scheduler.step()
 
         utils.log('----------------------------------------')
         utils.log('Epoch:' + str(epoch + 1))
         utils.log('----------------------------------------')
-        utils.log('Loss: Reconstruction {:.6f}'.format(loss_pixel.item()))
-        break
+        utils.log("g_loss: {} d_loss {}".format(g_loss, d_loss))
+        utils.log('\t gd_loss {}, op_loss {}, int_loss {} ,'.format(g_gd_loss, g_op_loss, g_int_loss))
+        utils.log('\t train psnr{}'.format(train_psnr))
+
         # Testing
-        # utils.log('Evaluation of ' + config['test_dataset_type'])
-        # for video in sorted(videos_list):
-        #     video_name = video.split('/')[-1]
-        #     psnr_list[video_name] = []
-        #
-        # model.eval()
-        # video_num = 0
-        # label_length += videos[videos_list[video_num].split('/')[-1]]['length']
-        # for k, imgs in enumerate(tqdm(test_dataloader, desc='test', leave=False)):
-        #     if k == label_length - 4 * (video_num + 1):
-        #         video_num += 1
-        #         label_length += videos[videos_list[video_num].split('/')[-1]]['length']
-        #     imgs = imgs.cuda()
-        #     outputs, feas = model.forward(imgs[:, 0: base_channel_num])
-        #     mse_imgs = torch.mean(loss_func_mse((outputs[0] + 1) / 2, (imgs[0, base_channel_num:] + 1) / 2)).item()
-        #     psnr_list[videos_list[video_num].split('/')[-1]].append(utils.psnr(mse_imgs))
-        #
-        # # Measuring the abnormality score and the AUC
-        # anomaly_score_total_list = []
-        # for video in sorted(videos_list):
-        #     video_name = video.split('/')[-1]
-        #     anomaly_score_total_list += utils.anomaly_score_list(psnr_list[video_name])
-        #
-        # anomaly_score_total_list = np.asarray(anomaly_score_total_list)
-        # accuracy = utils.AUC(anomaly_score_total_list, np.expand_dims(1 - labels_list, 0))
-        #
-        # utils.log('The result of ' + config['test_dataset_type'])
-        # utils.log('AUC: ' + str(accuracy * 100) + '%')
-        #
-        # # Save the model
-        # if epoch % save_epoch == 0 or epoch == config['epochs'] - 1:
-        #     torch.save(model, os.path.join(
-        #         save_path, 'model-epoch-{}.pth'.format(epoch)))
-        #
-        # if accuracy > max_accuracy:
-        #     max_accuracy = accuracy
-        #     torch.save(model, os.path.join(save_path, 'max-va-model.pth'))
+        utils.log('Evaluation of ' + config['test_dataset_type'])
+        for video in sorted(videos_list):
+            video_name = video.split('/')[-1]
+            psnr_list[video_name] = []
+
+        generator.eval()
+        video_num = 0
+        label_length += videos[videos_list[video_num].split('/')[-1]]['length']
+        for k, imgs in enumerate(tqdm(test_dataloader, desc='test', leave=False)):
+            if k == label_length - 4 * (video_num + 1):
+                video_num += 1
+                label_length += videos[videos_list[video_num].split('/')[-1]]['length']
+            imgs = imgs.cuda()
+            input = imgs[:, :-1, ]
+            target = imgs[:, -1, ]
+            input = input.view(input.shape[0], -1, input.shape[-2], input.shape[-1])
+
+            outputs = generator(input)
+            mse_imgs = int_loss((outputs + 1) / 2, (target + 1) / 2).item()
+            psnr_list[videos_list[video_num].split('/')[-1]].append(utils.psnr(mse_imgs))
+
+        # Measuring the abnormality score and the AUC
+        anomaly_score_total_list = []
+        for video in sorted(videos_list):
+            video_name = video.split('/')[-1]
+            anomaly_score_total_list += utils.anomaly_score_list(psnr_list[video_name])
+
+        anomaly_score_total_list = np.asarray(anomaly_score_total_list)
+        accuracy = utils.AUC(anomaly_score_total_list, np.expand_dims(1 - labels_list, 0))
+
+        utils.log('The result of ' + config['test_dataset_type'])
+        utils.log('AUC: ' + str(accuracy * 100) + '%')
+
+        # Save the model
+        if epoch % save_epoch == 0 or epoch == config['epochs'] - 1:
+            # torch.save(model, os.path.join(
+            #     save_path, 'model-epoch-{}.pth'.format(epoch)))
+
+            torch.save(generator, os.path.join(
+                save_path, 'generator-epoch-{}.pth'.format(epoch)))
+            torch.save(discriminator, os.path.join(
+                save_path, 'discriminator-epoch-{}.pth'.format(epoch)))
+
+        if accuracy > max_accuracy:
+            torch.save(generator, os.path.join(
+                save_path, 'generator-max'))
+            torch.save(discriminator, os.path.join(
+                save_path, 'discriminator-max'))
 
         utils.log('----------------------------------------')
 

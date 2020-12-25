@@ -61,14 +61,14 @@ class VadDataset(data.Dataset):
     def __getitem__(self, index):
         video_name = self.samples[index].split('/')[-2]      #self.samples[index]取到本次迭代取到的视频首帧，根据首帧能够得到其所属类别及图片名
         frame_name = int(self.samples[index].split('/')[-1].split('.')[-2])
-        video_name = '01'
-        frame_name = 5
         batch = []
         for i in range(self._time_step+self._num_pred):
             image = np_load_frame(self.videos[video_name]['frame'][frame_name+i], self._resize_height, self._resize_width)   #根据首帧图片名便可加载一段视频片段
             if self.transform is not None:
                 batch.append(self.transform(image))
-        return np.concatenate(batch, axis=0)     #最后即返回这段视频片段大小为[（_time_step+um_pred）*图片的通道数, _resize_height, _resize_width]
+        batch = np.concatenate(batch, axis=0)
+        batch = batch.reshape(self._time_step+self._num_pred, -1, batch.shape[-2], batch.shape[-1])
+        return batch    #最后即返回这段视频片段大小为[_time_step+num_pred, 图片的通道数, _resize_height, _resize_width]
         
         
     def __len__(self):
