@@ -18,9 +18,9 @@ from torch.autograd import Variable
 
 import utils
 from vad_dataloader import VadDataset
-from model.preAE import PreAE
-from model.unet import UNet
-from model.pix2pix_networks import PixelDiscriminator
+from models.preAE import PreAE
+from models.unet import UNet
+from models.pix2pix_networks import PixelDiscriminator
 from liteFlownet.lite_flownet import Network, batch_estimate
 from losses import *
 

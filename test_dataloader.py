@@ -18,7 +18,7 @@ import cv2
 
 import utils
 from vad_dataloader_object import VadDataset
-from model.preAE import PreAE
+from models.preAE import PreAE
 
 import torchvision.transforms as transforms
 

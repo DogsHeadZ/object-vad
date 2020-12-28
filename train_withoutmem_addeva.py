@@ -17,7 +17,7 @@ from torch.autograd import Variable
 
 import utils
 from vad_dataloader import VadDataset
-from model.preAE import PreAE
+from models.preAE import PreAE
 
 import torchvision.transforms as transforms
 
