@@ -75,7 +75,6 @@ def train(config):
     label_length = 0
     psnr_list = {}
     for video in sorted(videos_list):
-        # video_name = video.split('/')[-1]
         video_name = os.path.split(video)[-1]
         videos[video_name] = {}
         videos[video_name]['path'] = video
@@ -110,48 +109,75 @@ def train(config):
     base_channel_num  = train_dataset_args['c'] * (train_dataset_args['t_length'] - 1)
     save_epoch = 5 if config['save_epoch'] is None else config['save_epoch']
     for epoch in range(config['epochs']):
+        # model.train()
+        # for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
+        #     imgs = imgs.cuda()
+        #     outputs, feas = model(imgs[:, 0: base_channel_num])
+        #     optimizer.zero_grad()
+        #     loss_pixel = torch.mean(loss_func_mse(outputs, imgs[:, base_channel_num:]))
+        #     loss = loss_pixel
+        #     loss.backward()
+        #     optimizer.step()
+        # lr_scheduler.step()
 
-        model.train()
-        for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
-            imgs = imgs.cuda()
-            outputs, _, = model(imgs[:, 0: base_channel_num])
-            optimizer.zero_grad()
-            loss_pixel = torch.mean(loss_func_mse(outputs, imgs[:, base_channel_num:]))
-            loss = loss_pixel
-            loss.backward()
-            optimizer.step()
-        lr_scheduler.step()
+        # Utils.log('----------------------------------------')
+        # Utils.log('Epoch:' + str(epoch + 1))
+        # Utils.log('----------------------------------------')
+        # Utils.log('Loss: Reconstruction {:.6f}'.format(loss_pixel.item()))
 
-        Utils.log('----------------------------------------')
-        Utils.log('Epoch:' + str(epoch + 1))
-        Utils.log('----------------------------------------')
-        Utils.log('Loss: Reconstruction {:.6f}'.format(loss_pixel.item()))
+        # # extract
+        # extract_feas = []
+        # for j, imgs in enumerate(tqdm(train_dataloader, desc='extract', leave=False)):
+        #     imgs = imgs.cuda()
+        #     outputs, feas = model(imgs[:, 0: base_channel_num])
+        #     feas = feas.cpu().detach().numpy()
+        #     for fea in feas:
+        #         fea = np.amax(fea,2)
+        #         fea = np.amax(fea,1)
+        #         extract_feas.append(fea)
+        #     # print(type(extract_feas[0]))
+
+        # np.save("features.npy", extract_feas)
 
         # Testing
         Utils.log('Evaluation of ' + config['test_dataset_type'])
         for video in sorted(videos_list):
-            # video_name = video.split('/')[-1]
             video_name = os.path.split(video)[-1]
             psnr_list[video_name] = []
 
+        # print(psnr_list.keys())
+
         model.eval()
         video_num = 0
-        # label_length += videos[videos_list[video_num].split('/')[-1]]['length']
-        label_length += videos[os.path.split(videos_list[video_num])[-1]]['length']
-        for k, imgs in enumerate(tqdm(test_dataloader, desc='test', leave=False)):
-            if k == label_length - 4 * (video_num + 1):
+        label_length = videos[os.path.split(videos_list[video_num])[-1]]['length']
+        bboxes_list = sorted(os.listdir(test_bboxes))
+        # print(bboxes_list)
+        bboxes = np.load(os.path.join(test_bboxes,bboxes_list[0]), allow_pickle=True) 
+
+        mses = []
+        frame = 0
+        total_frame = 0
+        for k, imgs in enumerate(tqdm(test_dataloader, desc='test', leave=True)):
+            if total_frame == label_length - 4 * (video_num + 1):
                 video_num += 1
-                # label_length += videos[videos_list[video_num].split('/')[-1]]['length']
                 label_length += videos[os.path.split(videos_list[video_num])[-1]]['length']
+                bboxes = np.load(os.path.join(test_bboxes,bboxes_list[video_num]), allow_pickle=True) 
+                frame = 0
             imgs = imgs.cuda()
             outputs, feas = model.forward(imgs[:, 0: base_channel_num])
             mse_imgs = torch.mean(loss_func_mse((outputs[0] + 1) / 2, (imgs[0, base_channel_num:] + 1) / 2)).item()
-            psnr_list[videos_list[video_num].split('/')[-1]].append(Utils.psnr(mse_imgs))
+            
+            mses.append(mse_imgs)
+            
+            if len(mses) == len(bboxes[frame]):
+                psnr_list[os.path.split(videos_list[video_num])[-1]].append(Utils.psnr(max(mses)))
+                frame += 1
+                total_frame += 1
+                mses = []
 
         # Measuring the abnormality score and the AUC
         anomaly_score_total_list = []
         for video in sorted(videos_list):
-            # video_name = video.split('/')[-1]
             video_name = os.path.split(video)[-1]
             anomaly_score_total_list += Utils.anomaly_score_list(psnr_list[video_name])
 
