@@ -75,6 +75,10 @@ def train(config):
     label_length = 0
     psnr_list = {}
     for video in sorted(videos_list):
+<<<<<<< HEAD
+=======
+        # video_name = video.split('/')[-1]
+>>>>>>> d320e6a6801a4414a608d4e14e0dee1310c8737d
         video_name = os.path.split(video)[-1]
         videos[video_name] = {}
         videos[video_name]['path'] = video
@@ -109,21 +113,21 @@ def train(config):
     base_channel_num  = train_dataset_args['c'] * (train_dataset_args['t_length'] - 1)
     save_epoch = 5 if config['save_epoch'] is None else config['save_epoch']
     for epoch in range(config['epochs']):
-        # model.train()
-        # for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
-        #     imgs = imgs.cuda()
-        #     outputs, feas = model(imgs[:, 0: base_channel_num])
-        #     optimizer.zero_grad()
-        #     loss_pixel = torch.mean(loss_func_mse(outputs, imgs[:, base_channel_num:]))
-        #     loss = loss_pixel
-        #     loss.backward()
-        #     optimizer.step()
-        # lr_scheduler.step()
+        model.train()
+        for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
+            imgs = imgs.cuda()
+            outputs, feas = model(imgs[:, 0: base_channel_num])
+            optimizer.zero_grad()
+            loss_pixel = torch.mean(loss_func_mse(outputs, imgs[:, base_channel_num:]))
+            loss = loss_pixel
+            loss.backward()
+            optimizer.step()
+        lr_scheduler.step()
 
-        # Utils.log('----------------------------------------')
-        # Utils.log('Epoch:' + str(epoch + 1))
-        # Utils.log('----------------------------------------')
-        # Utils.log('Loss: Reconstruction {:.6f}'.format(loss_pixel.item()))
+        Utils.log('----------------------------------------')
+        Utils.log('Epoch:' + str(epoch + 1))
+        Utils.log('----------------------------------------')
+        Utils.log('Loss: Reconstruction {:.6f}'.format(loss_pixel.item()))
 
         # # extract
         # extract_feas = []
