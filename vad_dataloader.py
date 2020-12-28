@@ -3,6 +3,7 @@ from collections import OrderedDict
 import os
 import glob
 import cv2
+import torch
 import torch.utils.data as data
 
 
@@ -66,8 +67,9 @@ class VadDataset(data.Dataset):
             image = np_load_frame(self.videos[video_name]['frame'][frame_name+i], self._resize_height, self._resize_width)   #根据首帧图片名便可加载一段视频片段
             if self.transform is not None:
                 batch.append(self.transform(image))
-        batch = np.concatenate(batch, axis=0)
-        batch = batch.reshape(self._time_step+self._num_pred, -1, batch.shape[-2], batch.shape[-1])
+        batch = torch.stack(batch, dim=0)
+        # batch = np.concatenate(batch, axis=0)
+        # batch = batch.reshape(self._time_step+self._num_pred, -1, batch.shape[-2], batch.shape[-1])
         return batch    #最后即返回这段视频片段大小为[_time_step+num_pred, 图片的通道数, _resize_height, _resize_width]
         
         
