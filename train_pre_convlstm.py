@@ -244,7 +244,7 @@ def train(config):
             d_loss = discriminate_loss(discriminator(target), discriminator(outputs.detach()))
             d_loss.backward()
             optimizer_D.step()
-
+            break
         # lr_scheduler.step()
 
         utils.log('----------------------------------------')
@@ -270,7 +270,7 @@ def train(config):
             imgs = imgs.cuda()
             input = imgs[:, :-1, ]
             target = imgs[:, -1, ]
-            input = input.view(input.shape[0], -1, input.shape[-2], input.shape[-1])
+            # input = input.view(input.shape[0], -1, input.shape[-2], input.shape[-1])
 
             outputs = generator(input)
             mse_imgs = int_loss((outputs + 1) / 2, (target + 1) / 2).item()
