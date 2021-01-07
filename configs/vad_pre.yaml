@@ -11,6 +11,6 @@ model_args: {memory_size: 10, feature_dim: 512, key_dim: 512}
 optimizer: Adam
 optimizer_args: {lr: 0.0002, weight_decay: 0, lr_scheduler: CosineAnnealingLR, T_max: 60}
 
-epochs: 200
+epochs: 400
 
 save_epoch: 5

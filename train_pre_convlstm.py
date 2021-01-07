@@ -117,7 +117,11 @@ def train(config):
     else:
         raise Exception('The generator is not implemented')
 
+    # generator = torch.load('save/avenue_cycle_generator_convlstm_flownet2_0103/generator-epoch-199.pth')
+
+
     discriminator=PixelDiscriminator(train_dataset_args['c'],discriminator_num_filters,use_norm=False)
+    # discriminator = torch.load('save/avenue_cycle_generator_convlstm_flownet2_0103/discriminator-epoch-199.pth')
 
     # if not pretrain:
     #     generator.apply(weights_init_normal)
