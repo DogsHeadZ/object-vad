@@ -15,7 +15,9 @@ from tensorboardX import SummaryWriter
 from torch.autograd import Variable
 
 
-import Utils
+
+import utils
+
 from vad_dataloader import VadDataset
 from model.preAE import PreAE
 
@@ -36,8 +38,10 @@ def train(config):
     if args.tag is not None:
         svname += '_' + args.tag
     save_path = os.path.join('./save', svname)
+
     Utils.set_save_path(save_path)
     Utils.set_log_path(save_path)
+
     writer = SummaryWriter(os.path.join(save_path, 'tensorboard'))
     yaml.dump(config, open(os.path.join(save_path, 'classifier_config.yaml'), 'w'))
 
@@ -75,10 +79,7 @@ def train(config):
     label_length = 0
     psnr_list = {}
     for video in sorted(videos_list):
-<<<<<<< HEAD
-=======
-        # video_name = video.split('/')[-1]
->>>>>>> d320e6a6801a4414a608d4e14e0dee1310c8737d
+
         video_name = os.path.split(video)[-1]
         videos[video_name] = {}
         videos[video_name]['path'] = video
@@ -96,7 +97,9 @@ def train(config):
     params_encoder = list(model.encoder.parameters())
     params_decoder = list(model.decoder.parameters())
     params = params_encoder + params_decoder
+
     optimizer, lr_scheduler = Utils.make_optimizer(
+
         params, config['optimizer'], config['optimizer_args'])
 
     loss_func_mse = nn.MSELoss(reduction='none')
@@ -108,7 +111,9 @@ def train(config):
         model = nn.DataParallel(model)
 
     # Training
+
     Utils.log('Start train')
+
     max_accuracy = 0
     base_channel_num  = train_dataset_args['c'] * (train_dataset_args['t_length'] - 1)
     save_epoch = 5 if config['save_epoch'] is None else config['save_epoch']
@@ -123,6 +128,7 @@ def train(config):
             loss.backward()
             optimizer.step()
         lr_scheduler.step()
+
 
         Utils.log('----------------------------------------')
         Utils.log('Epoch:' + str(epoch + 1))
@@ -145,6 +151,7 @@ def train(config):
 
         # Testing
         Utils.log('Evaluation of ' + config['test_dataset_type'])
+
         for video in sorted(videos_list):
             video_name = os.path.split(video)[-1]
             psnr_list[video_name] = []
@@ -174,7 +181,9 @@ def train(config):
             mses.append(mse_imgs)
             
             if len(mses) == len(bboxes[frame]):
-                psnr_list[os.path.split(videos_list[video_num])[-1]].append(Utils.psnr(max(mses)))
+
+                psnr_list[os.path.split(videos_list[video_num])[-1]].append(utils.psnr(max(mses)))
+
                 frame += 1
                 total_frame += 1
                 mses = []
@@ -183,6 +192,7 @@ def train(config):
         anomaly_score_total_list = []
         for video in sorted(videos_list):
             video_name = os.path.split(video)[-1]
+
             anomaly_score_total_list += Utils.anomaly_score_list(psnr_list[video_name])
 
         anomaly_score_total_list = np.asarray(anomaly_score_total_list)
@@ -190,6 +200,7 @@ def train(config):
 
         Utils.log('The result of ' + config['test_dataset_type'])
         Utils.log('AUC: ' + str(accuracy * 100) + '%')
+
 
         # Save the model
         if epoch % save_epoch == 0 or epoch == config['epochs'] - 1:
@@ -205,6 +216,7 @@ def train(config):
     Utils.log('Training is finished')
 
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config')
@@ -218,5 +230,7 @@ if __name__ == '__main__':
         config['_parallel'] = True
         config['_gpu'] = args.gpu
 
+
     Utils.set_gpu(args.gpu)
+
     train(config)
