@@ -248,8 +248,13 @@ if __name__=="__main__":
             cv2.waitKey(1)
 
         # 保存
+
         np.save(save_file, clips_roi)
         print("save {}".format(clip))
+
+        # np.save(save_file, clips_roi)
+        # print("save {}".format(clip))
+
         
     cv2.waitKey(0)
     cv2.destroyAllWindows()
