@@ -36,6 +36,7 @@ def get_yolo_roi(img_path, model, device, dataset_name):
     for path, img, im0s, vid_cap in dataset:
         p, s, im0 = Path(path), '', im0s
 
+        # print(device)
         img = torch.from_numpy(img).to(device)
         img = img.float()
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -208,15 +209,22 @@ def MergeRoI(roi_boxes):
 
 
 
+def RoI(frames, dataset, model, device):
+    yolo_boxes = get_yolo_roi(frames[int(len(frames)/2)], model, device, dataset)
+    yolo_boxes = delCoverBboxes(yolo_boxes, dataset)
+    motion_boxes = get_motion_roi(frames, yolo_boxes, dataset)
+
+    bboxes = delCoverBboxes(yolo_boxes+motion_boxes, dataset)
+    return bboxes
 
 if __name__=="__main__":
 
     # load yolov3 model
     weights = 'yolov5/weights/yolov5s.pt'
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
     model = attempt_load(weights, map_location=device)  # load FP32 model
 
-    frame_path = "D:\\Mydata\\Graduation_design_VAD\\Dataset\\ped2\\testing\\frames" # frame path
+    frame_path = "/data0/lyx/VAD_datasets/ped2/testing/frames" # frame path
     clips = os.listdir(frame_path)
 
     # 记录bounding boxes
@@ -232,29 +240,26 @@ if __name__=="__main__":
             img3 = os.path.join(path, filenames[index])
             img4 = os.path.join(path, filenames[index+1])
             img5 = os.path.join(path, filenames[index+2])
-            yolo_boxes = get_yolo_roi(img3, model, device, "ped2")
-            yolo_boxes = delCoverBboxes(yolo_boxes, "ped2")
-            motion_boxes = get_motion_roi([img1, img2, img3, img4, img5], yolo_boxes,"ped2")
-            roi = delCoverBboxes(yolo_boxes+motion_boxes, "ped2")
+
+            # yolo_boxes = get_yolo_roi(img1, model, device, "ped2")
+            # yolo_boxes = delCoverBboxes(yolo_boxes, "ped2")
+            # motion_boxes = get_motion_roi([img1, img2, img3, img4, img5], yolo_boxes,"ped2")
+            # roi = delCoverBboxes(yolo_boxes+motion_boxes, "ped2")
+            roi = RoI([img1, img2, img3, img4, img5], "ped2", model, device)
 
             clips_roi.append(roi)
 
             # 可视化
-            img2 = cv2.imread(img2)
-            draw_bbox(img2, yolo_boxes, (0,255,0),1)
-            draw_bbox(img2, motion_boxes, (0,0,255), 1)
-            draw_bbox(img2, roi, (255,0,0), 2)
-            cv2.imshow("roi",img2)
-            cv2.waitKey(1)
+            # img = cv2.imread(img1)
+            # # draw_bbox(img1, yolo_boxes, (0,255,0),1)
+            # # draw_bbox(img1, motion_boxes, (0,0,255), 1)
+            # draw_bbox(img, roi, (255,0,0), 2)
+            # # cv2.imshow("roi",img)
+            # # cv2.waitKey(1)
 
         # 保存
-
         np.save(save_file, clips_roi)
         print("save {}".format(clip))
-
-        # np.save(save_file, clips_roi)
-        # print("save {}".format(clip))
-
         
     cv2.waitKey(0)
     cv2.destroyAllWindows()
