@@ -12,6 +12,9 @@ from utils_flownet2 import flow_utils, tools
 import torchvision.transforms as transforms
 
 
+import torch.nn.functional as F
+
+
 if __name__ == '__main__':
     # obtain the necessary args for construct the flownet framework
     parser = argparse.ArgumentParser()
@@ -21,29 +24,34 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # initial a Net
-    net = FlowNet2(args).cuda()
+    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    net = FlowNet2(args).to(device)
     # load the state_dict
     dict = torch.load("FlowNet2_checkpoint.pth.tar")
     net.load_state_dict(dict["state_dict"])
+    
+    for i in range(0,200):
+        # load the image pair, you can find this operation in dataset.py
+        pim1 = cv2.imread("/data0/lyx/VAD_datasets/ped2/training/frames/01/001.jpg")
+        pim1 = cv2.resize(pim1, (512, 384))
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+        pim1 = transform(pim1).unsqueeze(dim=0).to(device)
 
-    # load the image pair, you can find this operation in dataset.py
-    pim1 = cv2.imread("data/166.jpg")
-    pim1 = cv2.resize(pim1, (256, 256))
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-    pim1 = transform(pim1).unsqueeze(dim=0).cuda()
+        pim2 = cv2.imread("/data0/lyx/VAD_datasets/ped2/training/frames/01/002.jpg")
+        pim2 = cv2.resize(pim2, (512, 384))
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+        pim2 = transform(pim2).unsqueeze(dim=0).to(device)
 
-    pim2 = cv2.imread("data/167.jpg")
-    pim2 = cv2.resize(pim2, (256, 256))
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-    pim2 = transform(pim2).unsqueeze(dim=0).cuda()
+        pred_flow_esti_tensor = torch.cat([pim1.view(-1, 3, 1, pim1.shape[-2], pim1.shape[-1]),
+                                        pim2.view(-1, 3, 1, pim2.shape[-2], pim2.shape[-1])], 2)
 
-    pred_flow_esti_tensor = torch.cat([pim1.view(-1, 3, 1, pim1.shape[-2], pim1.shape[-1]),
-                                       pim2.view(-1, 3, 1, pim2.shape[-2], pim2.shape[-1])], 2)
-    result = net(pred_flow_esti_tensor * 255.0).squeeze()
+        result = net(pred_flow_esti_tensor * 255.0).squeeze()
+        print(i)
+
 
     # pim1 = read_gen("data/chairs/005.jpg")
     # pim2 = read_gen("data/chairs/006.jpg")
@@ -68,10 +76,35 @@ if __name__ == '__main__':
         f.flush()
         f.close()
 
-    data = result.data.cpu().numpy().transpose(1, 2, 0)
-    img = flow_utils.flow2img(data)
-    plt.imsave('data/result/test.png', img)
 
-    writeFlow("data/result/test.flo", data)
+    data = result.data.cpu().numpy().transpose(1, 2, 0)
+    print(data.shape) 
+ 
+
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+    ])
+
+    data2 = transform(data)
+    print(data2.shape)
+    print(data2.unsqueeze(0).shape)
+    data2 = data2.unsqueeze(0)
+    data2 = F.interpolate(data2, size=([128,128]), mode='bilinear', align_corners=False)
+    data2 = data2.squeeze(0).numpy().transpose(1,2,0)
+    print(data2.shape)   
+
+    
+    img = flow_utils.flow2img(data)
+    img2 = flow_utils.flow2img(data2)
+    # plt.imshow(img)
+    # plt.show()
+    print('11')
+    plt.imsave('data/test.png', img)
+    plt.imsave('data/test2.png', img2)
+
+    writeFlow("data/0000001-img.flo", data)
+
+    # flow_utils.visulize_flow_file(
+    #     os.path.join(flow_folder, '%06d.flo' % (batch_idx * args.inference_batch_size + i)), flow_vis_folder)
 
 
