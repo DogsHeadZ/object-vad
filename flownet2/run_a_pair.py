@@ -18,23 +18,29 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # initial a Net
+
     # net = FlowNet2(args).cuda()
     device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
     net = FlowNet2(args).to(device)
+
     # load the state_dict
     dict = torch.load("FlowNet2_checkpoint.pth.tar")
     net.load_state_dict(dict["state_dict"])
 
     # load the image pair, you can find this operation in dataset.py
+
     pim1 = read_gen("/data0/lyx/VAD_datasets/ped2/testing/frames/01/001.jpg")
     pim2 = read_gen("/data0/lyx/VAD_datasets/ped2/testing/frames/01/002.jpg")
+
     print(pim1.shape)
     images = [pim1, pim2]
 
     images = np.array(images).transpose(3, 0, 1, 2)
     print(images.shape)
+
     # im = torch.from_numpy(images.astype(np.float32)).unsqueeze(0).cuda()
     im = torch.from_numpy(images.astype(np.float32)).unsqueeze(0).to(device)
+
 
     # process the image pair to obtian the flow
     result = net(im).squeeze()
@@ -56,9 +62,11 @@ if __name__ == '__main__':
     # plt.imshow(img)
     # plt.show()
     print('11')
+
     plt.imsave('data/test.png', img)
 
     # writeFlow("data/chairs/0000001-img.flo", data)
+
 
     # flow_utils.visulize_flow_file(
     #     os.path.join(flow_folder, '%06d.flo' % (batch_idx * args.inference_batch_size + i)), flow_vis_folder)

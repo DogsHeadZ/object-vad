@@ -11,6 +11,7 @@ from utils_flownet2.frame_utils import read_gen  # the path is depended on where
 from utils_flownet2 import flow_utils, tools
 import torchvision.transforms as transforms
 
+
 import torch.nn.functional as F
 
 
@@ -50,6 +51,7 @@ if __name__ == '__main__':
 
         result = net(pred_flow_esti_tensor * 255.0).squeeze()
         print(i)
+
 
     # pim1 = read_gen("data/chairs/005.jpg")
     # pim2 = read_gen("data/chairs/006.jpg")
@@ -104,4 +106,5 @@ if __name__ == '__main__':
 
     # flow_utils.visulize_flow_file(
     #     os.path.join(flow_folder, '%06d.flo' % (batch_idx * args.inference_batch_size + i)), flow_vis_folder)
+
 
