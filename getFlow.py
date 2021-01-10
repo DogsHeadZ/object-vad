@@ -35,10 +35,7 @@ def get_frame_flow(img1, img2, model, device, width, height):
                                        pim2.view(-1, 3, 1, pim2.shape[-2], pim2.shape[-1])], 2)
 
     result = model(pred_flow_esti_tensor * 255.0).squeeze()
-    data = result.data.cpu().numpy().transpose(1, 2, 0)
-
-
-    return data
+    return result
 
 
 

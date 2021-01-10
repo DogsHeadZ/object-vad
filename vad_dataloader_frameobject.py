@@ -43,9 +43,10 @@ def np_load_frame_roi(filename, resize_height, resize_width, bbox):
 
 def roi_flow(frame_flow, bbox, resize_height, resize_width, img_size):
     # 坐标转换
+    frame_flow = frame_flow.data.cpu()
     (xmin, ymin, xmax, ymax) = bbox
-    heigh_coef = frame_flow.shape[0]/img_size[0]
-    width_coef = frame_flow.shape[1]/img_size[1]
+    heigh_coef = frame_flow.shape[1]/img_size[0]
+    width_coef = frame_flow.shape[2]/img_size[1]
     # print("img_size: ", img_size)
 
     # print(frame_flow.shape)
@@ -55,14 +56,9 @@ def roi_flow(frame_flow, bbox, resize_height, resize_width, img_size):
     ymax = int(ymax*heigh_coef)
     # print(xmin, ymin,xmax, ymax)
 
-    roi_flow = frame_flow[ymin:ymax, xmin:xmax, :]
+    roi_flow = frame_flow[:, ymin:ymax, xmin:xmax]
     # print(roi_flow.shape)
-    
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-    roi_flow = transform(roi_flow)
-    # print(roi_flow.shape)
+
     # 没有办法直接resize 所以使用双线性插值
     roi_flow = roi_flow.unsqueeze(0)
     roi_flow = F.interpolate(roi_flow, size=([resize_width,resize_height]), mode='bilinear', align_corners=False)
@@ -188,16 +184,13 @@ class VadDataset(data.Dataset):
             # print("object_batch.shape: ", object_batch.shape)
             batch.append(object_batch)
 
-            
             # flow
             object_flow = []
             for i in range(self._time_step+self._num_pred - 1):
-                flow = roi_flow(frame_flows[i], bbox, self._resize_height, self._resize_width, self.img_size)
+                flow = roi_flow(frame_flows[i], bbox, self._resize_height, self._resize_width, self.img_size)   # img_size为原图大小，用于将缩放后的光流图与原图对应
                 object_flow.append(flow)
             object_flow = torch.stack(object_flow, dim=0)
             batch_flow.append(object_flow)
-
-
 
         batch = torch.stack(batch, dim=0)
         batch_flow = torch.stack(batch_flow, dim=0)
