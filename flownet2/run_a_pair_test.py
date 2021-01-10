@@ -24,22 +24,22 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # initial a Net
-    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net = FlowNet2(args).to(device)
     # load the state_dict
     dict = torch.load("FlowNet2_checkpoint.pth.tar")
     net.load_state_dict(dict["state_dict"])
     
-    for i in range(0,200):
+    for i in range(0,1):
         # load the image pair, you can find this operation in dataset.py
-        pim1 = cv2.imread("/data0/lyx/VAD_datasets/ped2/training/frames/01/001.jpg")
+        pim1 = cv2.imread("/data1/feihuqaq/AllDatasets/ped2/testing/frames/01/001.jpg")
         pim1 = cv2.resize(pim1, (512, 384))
         transform = transforms.Compose([
             transforms.ToTensor(),
         ])
         pim1 = transform(pim1).unsqueeze(dim=0).to(device)
 
-        pim2 = cv2.imread("/data0/lyx/VAD_datasets/ped2/training/frames/01/002.jpg")
+        pim2 = cv2.imread("/data1/feihuqaq/AllDatasets/ped2/testing/frames/01/002.jpg")
         pim2 = cv2.resize(pim2, (512, 384))
         transform = transforms.Compose([
             transforms.ToTensor(),

@@ -47,7 +47,6 @@ def roi_flow(frame_flow, bbox, resize_height, resize_width, img_size):
     heigh_coef = frame_flow.shape[0]/img_size[0]
     width_coef = frame_flow.shape[1]/img_size[1]
     # print("img_size: ", img_size)
-    # print(frame_flow.shape)
 
     # print(frame_flow.shape)
     xmin = int(xmin*width_coef)
@@ -223,8 +222,8 @@ if __name__ == "__main__":
     import torchvision.transforms as transforms
 
     batch_size = 1
-    datadir = "/data0/lyx/VAD_datasets/ped2/testing/frames"
-    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    datadir = "/data1/feihuqaq/AllDatasets/ped2/testing/frames"
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
     # flow 和 yolo 在线计算
     train_data = VadDataset(video_folder= datadir, bbox_folder = None, dataset="ped2", flow_folder=None,
@@ -257,7 +256,7 @@ if __name__ == "__main__":
     print(X.shape, flow.shape)
 
 
-    # # 显示一个batch, pil显示的颜色是有问题的，只是大概看一下
+    # 显示一个batch, pil显示的颜色是有问题的，只是大概看一下
     # index = 1
     # for i in range(X.shape[1]):
     #     for j in range(X.shape[2]):
@@ -266,8 +265,23 @@ if __name__ == "__main__":
     #         print(i,j)
     #         # img = X[j,i*3:i*3+3].cpu().clone()
     #         img = X[0,i,j,:,:,:].cpu().clone()
-    #         img = img.squeeze(0) 
-    #         img = unloader(img)           
-    #         plt.imshow(img)  
-    # plt.show()   
+    #         img = img.squeeze(0)
+    #         img = unloader(img)
+    #         plt.imshow(img)
+    # plt.savefig('batch.jpg')
 
+    index = 1
+    for i in range(flow.shape[1]):
+        for j in range(flow.shape[2]):
+            plt.subplot(flow.shape[1], flow.shape[2], index)
+            index += 1
+            print(i, j)
+            # img = X[j,i*3:i*3+3].cpu().clone()
+            img = flow[0, i, j, :, :, :].cpu().clone()
+            img = img.numpy().transpose(1,2,0)
+            print(img.shape)
+            img = flow_utils.flow2img(img)
+
+            # img = unloader(img)
+            plt.imshow(img)
+    plt.savefig('batchflow.jpg')
