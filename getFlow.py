@@ -12,7 +12,8 @@ from flownet2.utils_flownet2 import flow_utils, tools
 import torchvision.transforms as transforms
 
 def writeFlow(name, flow):
-    np.save(name, flow)
+    # np.save(name, flow)
+    torch.save(flow, name)
 
 def readFlow(name):
     flow = np.load(name, allow_pickle=True)
@@ -35,10 +36,10 @@ def get_frame_flow(img1, img2, model, device, width, height):
                                        pim2.view(-1, 3, 1, pim2.shape[-2], pim2.shape[-1])], 2)
 
     result = model(pred_flow_esti_tensor * 255.0).squeeze()
-    data = result.data.cpu().numpy().transpose(1, 2, 0)
+    # data = result.data.cpu().numpy().transpose(1, 2, 0)
 
 
-    return data
+    return result.data
 
 
 
@@ -83,8 +84,10 @@ if __name__ == '__main__':
             dir_ = os.path.join(save_path, video)
             if not os.path.exists(dir_):
                 os.mkdir(dir_)
-            writeFlow(dir_ + "/" + frame_list[i].split('.')[0] + ".npy", flow)
+            # print(flow.cpu().numpy().shape) [2, 384, 512]
+            writeFlow(dir_ + "/" + frame_list[i].split('.')[0] + ".pt", flow.cpu() )
 
+        print("save: ", video)
 
             # 这个地方遇到一个问题，每次计算了大概103张图的光流之后就会报错
             # 暂时没解决

@@ -43,26 +43,27 @@ def np_load_frame_roi(filename, resize_height, resize_width, bbox):
 
 def roi_flow(frame_flow, bbox, resize_height, resize_width, img_size):
     # 坐标转换
+    frame_flow = frame_flow.cpu()
     (xmin, ymin, xmax, ymax) = bbox
-    heigh_coef = frame_flow.shape[0]/img_size[0]
-    width_coef = frame_flow.shape[1]/img_size[1]
+    heigh_coef = frame_flow.shape[1]/img_size[0]
+    width_coef = frame_flow.shape[2]/img_size[1]
     # print("img_size: ", img_size)
     # print(frame_flow.shape)
 
-    # print(frame_flow.shape)
     xmin = int(xmin*width_coef)
     ymin = int(ymin*heigh_coef)
     xmax = int(xmax*width_coef)
     ymax = int(ymax*heigh_coef)
     # print(xmin, ymin,xmax, ymax)
 
-    roi_flow = frame_flow[ymin:ymax, xmin:xmax, :]
+    # roi_flow = frame_flow[ymin:ymax, xmin:xmax, :]
     # print(roi_flow.shape)
-    
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-    roi_flow = transform(roi_flow)
+    roi_flow = frame_flow[: , ymin:ymax, xmin:xmax] 
+    # transform = transforms.Compose([
+    #     transforms.ToTensor(),
+    # ])
+    # roi_flow = transform(roi_flow)
+
     # print(roi_flow.shape)
     # 没有办法直接resize 所以使用双线性插值
     roi_flow = roi_flow.unsqueeze(0)
@@ -132,7 +133,7 @@ class VadDataset(data.Dataset):
             for flow_dir in sorted(os.listdir(self.flow_folder)):
                 video_name = flow_dir
                 path = os.path.join(self.flow_folder, flow_dir)
-                self.videos[video_name]['flow'] = sorted(glob.glob(os.path.join(path, '*.npy')))
+                self.videos[video_name]['flow'] = sorted(glob.glob(os.path.join(path, '*')))
         # print(self.videos[video_name]['flow'])
 
                     
@@ -168,8 +169,9 @@ class VadDataset(data.Dataset):
         if self.flow_folder != None: #已经提取好了，直接读出来
             frame_flows = []
             for i in range(self._time_step+self._num_pred-1):
-                frame_flow = np.load(self.videos[video_name]['flow'][frame_name+i], allow_pickle=True)
-                frame_flows.append(frame_flow)
+                # frame_flow = np.load(self.videos[video_name]['flow'][frame_name+i], allow_pickle=True)
+                frame_flow = torch.load( self.videos[video_name]['flow'][frame_name+i] )
+                frame_flows.append( frame_flow )
         else:
             frame_flows = []
             for i in range(self._time_step+self._num_pred-1):
@@ -224,7 +226,7 @@ if __name__ == "__main__":
 
     batch_size = 1
     datadir = "/data0/lyx/VAD_datasets/ped2/testing/frames"
-    device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
     # flow 和 yolo 在线计算
     train_data = VadDataset(video_folder= datadir, bbox_folder = None, dataset="ped2", flow_folder=None,
