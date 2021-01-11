@@ -85,7 +85,6 @@ if __name__ == '__main__':
             if not os.path.exists(dir_):
                 os.mkdir(dir_)
             # print(flow.cpu().numpy().shape) [2, 384, 512]
-            # save as tensor
             writeFlow(dir_ + "/" + frame_list[i].split('.')[0] + ".pt", flow.cpu() )
 
         print("save: ", video)
