@@ -180,6 +180,9 @@ def overlap_area(box1, box2):
         wid = min(ymax, bmax) - max(ymin, bmin)
         return len*wid
 
+def area(box):
+    return abs(box[2]-box[0])*(box[3]-box[1])
+    
 def MergeRoI(roi_boxes):
     roi = []
     for box1 in roi_boxes:
