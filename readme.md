@@ -31,3 +31,13 @@ python train_withoutmem_addeva.py --config configs/vad_baseline.yaml --gpu 0,1,2
 原来的yolo v5在cuda：0上可以正常运行，但是其他卡或者多卡的时候有点问题，重新在https://github.com/ultralytics/yolov5下了最新版本
 
 Flownet2在cuda：0和其他卡上都能跑，但是cuda：0的光流是正常的，其他都不太对劲，而且如果不是在cuda：0上跑，大概计算了103张图的光流之后会报错，这个问题很魔幻，还没解决
+
+
+
+
+
+2021.1.10
+
+完善了dataloader中光流的读取
+
+getFlow.py保存光流的时候改为直接用torch.save()保存tensor，避免转换成numpy太麻烦，而且维度变换有些问题。

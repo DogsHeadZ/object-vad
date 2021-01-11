@@ -43,22 +43,18 @@ def np_load_frame_roi(filename, resize_height, resize_width, bbox):
 
 def roi_flow(frame_flow, bbox, resize_height, resize_width, img_size):
     # 坐标转换
-    frame_flow = frame_flow.data.cpu()
+    frame_flow = frame_flow.cpu()
     (xmin, ymin, xmax, ymax) = bbox
     heigh_coef = frame_flow.shape[1]/img_size[0]
     width_coef = frame_flow.shape[2]/img_size[1]
-    # print("img_size: ", img_size)
 
-    # print(frame_flow.shape)
     xmin = int(xmin*width_coef)
     ymin = int(ymin*heigh_coef)
     xmax = int(xmax*width_coef)
     ymax = int(ymax*heigh_coef)
-    # print(xmin, ymin,xmax, ymax)
+    roi_flow = frame_flow[: , ymin:ymax, xmin:xmax] 
 
-    roi_flow = frame_flow[:, ymin:ymax, xmin:xmax]
     # print(roi_flow.shape)
-
     # 没有办法直接resize 所以使用双线性插值
     roi_flow = roi_flow.unsqueeze(0)
     roi_flow = F.interpolate(roi_flow, size=([resize_width,resize_height]), mode='bilinear', align_corners=False)
@@ -127,7 +123,7 @@ class VadDataset(data.Dataset):
             for flow_dir in sorted(os.listdir(self.flow_folder)):
                 video_name = flow_dir
                 path = os.path.join(self.flow_folder, flow_dir)
-                self.videos[video_name]['flow'] = sorted(glob.glob(os.path.join(path, '*.npy')))
+                self.videos[video_name]['flow'] = sorted(glob.glob(os.path.join(path, '*')))
         # print(self.videos[video_name]['flow'])
 
                     
@@ -163,8 +159,9 @@ class VadDataset(data.Dataset):
         if self.flow_folder != None: #已经提取好了，直接读出来
             frame_flows = []
             for i in range(self._time_step+self._num_pred-1):
-                frame_flow = np.load(self.videos[video_name]['flow'][frame_name+i], allow_pickle=True)
-                frame_flows.append(frame_flow)
+                # frame_flow = np.load(self.videos[video_name]['flow'][frame_name+i], allow_pickle=True)
+                frame_flow = torch.load( self.videos[video_name]['flow'][frame_name+i] )
+                frame_flows.append( frame_flow )
         else:
             frame_flows = []
             for i in range(self._time_step+self._num_pred-1):
@@ -184,13 +181,16 @@ class VadDataset(data.Dataset):
             # print("object_batch.shape: ", object_batch.shape)
             batch.append(object_batch)
 
+            
             # flow
             object_flow = []
             for i in range(self._time_step+self._num_pred - 1):
-                flow = roi_flow(frame_flows[i], bbox, self._resize_height, self._resize_width, self.img_size)   # img_size为原图大小，用于将缩放后的光流图与原图对应
+                flow = roi_flow(frame_flows[i], bbox, self._resize_height, self._resize_width, self.img_size)
                 object_flow.append(flow)
             object_flow = torch.stack(object_flow, dim=0)
             batch_flow.append(object_flow)
+
+
 
         batch = torch.stack(batch, dim=0)
         batch_flow = torch.stack(batch_flow, dim=0)
@@ -215,7 +215,7 @@ if __name__ == "__main__":
     import torchvision.transforms as transforms
 
     batch_size = 1
-    datadir = "/data1/feihuqaq/AllDatasets/ped2/testing/frames"
+    datadir = "/data0/lyx/VAD_datasets/ped2/testing/frames"
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
     # flow 和 yolo 在线计算
@@ -249,7 +249,7 @@ if __name__ == "__main__":
     print(X.shape, flow.shape)
 
 
-    # 显示一个batch, pil显示的颜色是有问题的，只是大概看一下
+    # # 显示一个batch, pil显示的颜色是有问题的，只是大概看一下
     # index = 1
     # for i in range(X.shape[1]):
     #     for j in range(X.shape[2]):
@@ -258,23 +258,8 @@ if __name__ == "__main__":
     #         print(i,j)
     #         # img = X[j,i*3:i*3+3].cpu().clone()
     #         img = X[0,i,j,:,:,:].cpu().clone()
-    #         img = img.squeeze(0)
-    #         img = unloader(img)
-    #         plt.imshow(img)
-    # plt.savefig('batch.jpg')
+    #         img = img.squeeze(0) 
+    #         img = unloader(img)           
+    #         plt.imshow(img)  
+    # plt.show()   
 
-    index = 1
-    for i in range(flow.shape[1]):
-        for j in range(flow.shape[2]):
-            plt.subplot(flow.shape[1], flow.shape[2], index)
-            index += 1
-            print(i, j)
-            # img = X[j,i*3:i*3+3].cpu().clone()
-            img = flow[0, i, j, :, :, :].cpu().clone()
-            img = img.numpy().transpose(1,2,0)
-            print(img.shape)
-            img = flow_utils.flow2img(img)
-
-            # img = unloader(img)
-            plt.imshow(img)
-    plt.savefig('batchflow.jpg')
