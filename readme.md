@@ -16,3 +16,5 @@
 
 其中编码器和解码器采用Cycle-GAN的结构consisting of 3 convolution layers and 6 residual blocks，不对输入图像在通道维度上叠加，而是对每个视频帧图片单独进行编码，即将输入的N x T x c x h x w转换为(N x T) x c x h w。再将其转换为为N x T x c x h x w，输入到convlstm模块。
 
+经过实验，换成后来采用的convlstm的结果确实提高了，经过400轮，精度最高为89.47
+`python train_pre_convlstm.py --config configs/vad_pre.yaml --gpu 0`
