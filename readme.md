@@ -41,3 +41,5 @@ Flownet2在cuda：0和其他卡上都能跑，但是cuda：0的光流是正常�
 完善了dataloader中光流的读取
 
 getFlow.py保存光流的时候改为直接用torch.save()保存tensor，避免转换成numpy太麻烦，而且维度变换有些问题。
+
+11
