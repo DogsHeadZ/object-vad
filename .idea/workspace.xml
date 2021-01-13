@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f9c1d418-c6e6-4de3-9ca2-acacedecdc17" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/convlstm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/networks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/pix2pix_networks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/preAE.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/unet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="zwh_object" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="hiddenUrls">
+      <set>
+        <option value="https://github.com/DogsHeadZ/object-vad.git" />
+      </set>
+    </option>
+  </component>
+  <component name="JupyterTrust" id="d758dcdf-c74c-47e4-8761-94663ba8b3cf" />
+  <component name="ProjectId" id="1lmnI7ZM1N1hWhX1GkZFPUuwRlw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/flownet2" />
+      <recent name="$PROJECT_DIR$/flownet2/data" />
+      <recent name="$PROJECT_DIR$/configs" />
+      <recent name="$PROJECT_DIR$/models" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.OCSVM">
+    <configuration name="MDP" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="object-vad" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/MDP.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="OCSVM" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="object-vad" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/OCSVM.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="readmat" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="object-vad" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/readmat.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="testgrammar" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="object-vad" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testgrammar.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train_pre_liteflownet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="object-vad" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_pre_liteflownet.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.train_pre_liteflownet" />
+        <item itemvalue="Python.testgrammar" />
+        <item itemvalue="Python.readmat" />
+        <item itemvalue="Python.OCSVM" />
+        <item itemvalue="Python.MDP" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f9c1d418-c6e6-4de3-9ca2-acacedecdc17" name="Default Changelist" comment="" />
+      <created>1608211051705</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608211051705</updated>
+      <workItem from="1608211053050" duration="2896000" />
+      <workItem from="1608516702271" duration="11000" />
+      <workItem from="1608516808141" duration="19602000" />
+      <workItem from="1608600238538" duration="10399000" />
+      <workItem from="1608773727344" duration="708000" />
+      <workItem from="1608790400283" duration="598000" />
+      <workItem from="1608797862337" duration="605000" />
+      <workItem from="1608860641920" duration="15377000" />
+      <workItem from="1608882298098" duration="9123000" />
+      <workItem from="1609042060052" duration="22089000" />
+      <workItem from="1609389930952" duration="8353000" />
+      <workItem from="1609815654675" duration="31539000" />
+      <workItem from="1610363359067" duration="11686000" />
+      <workItem from="1610503266135" duration="231000" />
+      <workItem from="1610505990993" duration="3674000" />
+    </task>
+    <task id="LOCAL-00001" summary="first version for PreAE">
+      <created>1608211331924</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1608211331924</updated>
+    </task>
+    <task id="LOCAL-00002" summary="test new branch zwh">
+      <created>1608211883726</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1608211883726</updated>
+    </task>
+    <task id="LOCAL-00003" summary="test new branch zwh">
+      <created>1608212835003</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1608212835003</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add liteflownet">
+      <created>1608879068513</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1608879068513</updated>
+    </task>
+    <task id="LOCAL-00005" summary="complete ano-pre1.0&#10;change the dataloader output form">
+      <created>1608886486149</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1608886486149</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add flownet2">
+      <created>1609046156236</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1609046156236</updated>
+    </task>
+    <task id="LOCAL-00007" summary="modify the names of files">
+      <created>1609134772010</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1609134772010</updated>
+    </task>
+    <task id="LOCAL-00008" summary="change file names">
+      <created>1609135588196</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1609135588196</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add cyclegan_conlstm">
+      <created>1609146946221</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1609146946221</updated>
+    </task>
+    <task id="LOCAL-00010" summary="change epoch">
+      <created>1609763945899</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1609763945899</updated>
+    </task>
+    <task id="LOCAL-00011" summary="the last commit in a while">
+      <created>1610021980880</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1610021980881</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add flownet2 by zwh">
+      <created>1610074054152</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1610074054152</updated>
+    </task>
+    <task id="LOCAL-00013" summary="add ocsvm by zwh">
+      <created>1610255596692</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1610255596692</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add ocsvm by zwh">
+      <created>1610255827021</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1610255827021</updated>
+    </task>
+    <task id="LOCAL-00015" summary="flow dataloader">
+      <created>1610259508559</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1610259508559</updated>
+    </task>
+    <task id="LOCAL-00016" summary="simplify flow dataloader">
+      <created>1610265859119</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1610265859119</updated>
+    </task>
+    <task id="LOCAL-00017" summary="add show all object">
+      <created>1610430673220</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1610430673220</updated>
+    </task>
+    <task id="LOCAL-00018" summary="add convlstm result">
+      <created>1610430966721</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1610430966721</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Merge branch 'zwh_pre' into zwh_object">
+      <created>1610502744469</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1610502744469</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first version for PreAE" />
+    <MESSAGE value="test new branch zwh" />
+    <MESSAGE value="add liteflownet" />
+    <MESSAGE value="complete ano-pre1.0&#10;change the dataloader output form" />
+    <MESSAGE value="add flownet2" />
+    <MESSAGE value="modify the names of files" />
+    <MESSAGE value="change file names" />
+    <MESSAGE value="add cyclegan_conlstm" />
+    <MESSAGE value="change epoch" />
+    <MESSAGE value="the last commit in a while" />
+    <MESSAGE value="add flownet2 by zwh" />
+    <MESSAGE value="add ocsvm by zwh" />
+    <MESSAGE value="flow dataloader" />
+    <MESSAGE value="simplify flow dataloader" />
+    <MESSAGE value="add show all object" />
+    <MESSAGE value="add convlstm result" />
+    <MESSAGE value="Merge branch 'zwh_pre' into zwh_object" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'zwh_pre' into zwh_object" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2000" y="202" key="#Deployment" timestamp="1610508820028">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2000" y="202" key="#Deployment/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610508820028" />
+    <state x="2000" y="202" key="#Deployment/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610503980500" />
+    <state x="2034" y="222" key="#Inspections" timestamp="1608882648799">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2034" y="222" key="#Inspections/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1608882648799" />
+    <state x="2277" y="407" key="#Notifications" timestamp="1610255663926">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2277" y="407" key="#Notifications/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610255663926" />
+    <state x="1984" y="189" key="#SSH_Configurations" timestamp="1610503853860">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1984" y="189" key="#SSH_Configurations/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1608213639156" />
+    <state x="1984" y="189" key="#SSH_Configurations/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610503853860" />
+    <state x="2141" y="346" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1609134079612">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2141" y="346" key="#com.intellij.fileTypes.FileTypeChooser/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1609134079612" />
+    <state x="1994" y="0" key="CommitChangelistDialog2" timestamp="1610502744289">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1994" y="0" key="CommitChangelistDialog2/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610502744289" />
+    <state x="1994" y="121" key="CommitChangelistDialog2/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1608879068235" />
+    <state x="2088" y="166" key="DiffContextDialog" timestamp="1610501616036">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2088" y="166" key="DiffContextDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610501616036" />
+    <state x="2270" y="441" key="Github.ShareDialog" timestamp="1608211101441">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2270" y="441" key="Github.ShareDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1608211101441" />
+    <state x="2211" y="249" key="Github.UntrackedFilesDialog" timestamp="1608211114082">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2211" y="249" key="Github.UntrackedFilesDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1608211114082" />
+    <state width="1878" height="224" key="GridCell.Tab.0.bottom" timestamp="1610266818670">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1609812926524" />
+    <state width="1878" height="224" key="GridCell.Tab.0.bottom/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610266818670" />
+    <state width="1878" height="154" key="GridCell.Tab.0.bottom/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610026318490" />
+    <state width="1878" height="224" key="GridCell.Tab.0.center" timestamp="1610266818668">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1609812926523" />
+    <state width="1878" height="224" key="GridCell.Tab.0.center/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610266818668" />
+    <state width="1878" height="154" key="GridCell.Tab.0.center/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610026318488" />
+    <state width="1878" height="224" key="GridCell.Tab.0.left" timestamp="1610266818667">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1609812926522" />
+    <state width="1398" height="337" key="GridCell.Tab.0.left/0.25.1440.805@0.0.1440.830" timestamp="1609812926502" />
+    <state width="1878" height="224" key="GridCell.Tab.0.left/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610266818667" />
+    <state width="1878" height="154" key="GridCell.Tab.0.left/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610026318486" />
+    <state width="1878" height="224" key="GridCell.Tab.0.right" timestamp="1610266818669">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1609812926523" />
+    <state width="1878" height="224" key="GridCell.Tab.0.right/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610266818669" />
+    <state width="1878" height="154" key="GridCell.Tab.0.right/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610026318489" />
+    <state width="1878" height="376" key="GridCell.Tab.1.bottom" timestamp="1609812926527">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1609812926527" />
+    <state width="1878" height="376" key="GridCell.Tab.1.bottom/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1609750449012" />
+    <state width="1878" height="376" key="GridCell.Tab.1.center" timestamp="1609812926526">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1609812926526" />
+    <state width="1878" height="376" key="GridCell.Tab.1.center/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1609750449010" />
+    <state width="1878" height="376" key="GridCell.Tab.1.left" timestamp="1609812926524">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1609812926524" />
+    <state width="1878" height="376" key="GridCell.Tab.1.left/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1609750449009" />
+    <state width="1878" height="376" key="GridCell.Tab.1.right" timestamp="1609812926527">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1878" height="376" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1609812926527" />
+    <state width="1878" height="376" key="GridCell.Tab.1.right/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1609750449011" />
+    <state x="1822" y="313" key="MergeDialog" timestamp="1610502056649">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1822" y="313" key="MergeDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610502056649" />
+    <state x="2083" y="411" width="630" height="551" key="MultipleFileMergeDialog" timestamp="1610502074559">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2083" y="411" width="630" height="551" key="MultipleFileMergeDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610502074559" />
+    <state x="2187" y="246" key="RollbackChangesDialog" timestamp="1610501788618">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2187" y="246" key="RollbackChangesDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610501788618" />
+    <state x="1909" y="176" key="SettingsEditor" timestamp="1608212667113">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1909" y="176" key="SettingsEditor/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1608212667113" />
+    <state x="2000" y="277" key="Vcs.Push.Dialog.v2" timestamp="1610430972244">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2000" y="277" key="Vcs.Push.Dialog.v2/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610430972244" />
+    <state x="2000" y="277" key="Vcs.Push.Dialog.v2/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1608879078503" />
+    <state x="2187" y="278" key="VcsDiffUtil.ChangesDialog" timestamp="1610501728871">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2187" y="278" key="VcsDiffUtil.ChangesDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610501728871" />
+    <state x="1540" y="100" width="1720" height="880" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1610255568709">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1540" y="100" width="1720" height="880" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610255568709" />
+    <state x="2291" y="274" key="ftp.server.browser" timestamp="1610503979359">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2291" y="274" key="ftp.server.browser/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1608213706774" />
+    <state x="2291" y="274" key="ftp.server.browser/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1610503979359" />
+    <state x="2157" y="257" key="git4idea.branch.GitSmartOperationDialog" timestamp="1610255271528">
+      <screen x="1440" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2157" y="257" key="git4idea.branch.GitSmartOperationDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610255271528" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/object_vad$train_pre.coverage" NAME="train_pre Coverage Results" MODIFIED="1608882365473" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/object_vad$readmat.coverage" NAME="readmat Coverage Results" MODIFIED="1609751628068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/object_vad$testgrammar.coverage" NAME="testgrammar Coverage Results" MODIFIED="1608622307452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/object_vad$OCSVM.coverage" NAME="OCSVM Coverage Results" MODIFIED="1610027521967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/object_vad$MDP.coverage" NAME="MDP Coverage Results" MODIFIED="1609681842234" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
