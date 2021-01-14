@@ -18,7 +18,6 @@ from flownet2.models import FlowNet2
 
 
 import utils
-
 from vadmodels.preAE import PreAE
 from vadmodels.unet import UNet
 from vadmodels.networks import define_G
@@ -225,9 +224,9 @@ def train(config):
             g_object_loss = object_loss(outputs, target, flow, bboxes)
             g_adv_loss = adversarial_loss(discriminator(outputs))
             g_op_loss = op_loss(flow_pred, flow_gt)
-            g_int_loss = int_loss(outputs, target)
+            # g_int_loss = int_loss(outputs, target)
             g_gd_loss = gd_loss(outputs, target)
-            g_loss = lam_adv * g_adv_loss + lam_gd * g_gd_loss + lam_op * g_op_loss + lam_int * g_int_loss
+            g_loss = lam_adv * g_adv_loss + lam_gd * g_gd_loss + lam_op * g_op_loss + lam_int * g_object_loss
 
             optimizer_G.zero_grad()
             g_loss.backward()
@@ -246,7 +245,7 @@ def train(config):
         utils.log('Epoch:' + str(epoch + 1))
         utils.log('----------------------------------------')
         utils.log("g_loss: {} d_loss {}".format(g_loss, d_loss))
-        utils.log('\t gd_loss {}, op_loss {}, int_loss {} ,'.format(g_gd_loss, g_op_loss, g_int_loss))
+        utils.log('\t gd_loss {}, op_loss {}, int_loss {} ,'.format(g_gd_loss, g_op_loss, g_object_loss))
         utils.log('\t train psnr{}'.format(train_psnr))
 
         # Testing
@@ -268,7 +267,7 @@ def train(config):
             # input = input.view(input.shape[0], -1, input.shape[-2], input.shape[-1])
 
             outputs = generator(input)
-            mse_imgs = int_loss((outputs + 1) / 2, (target + 1) / 2).item()
+            mse_imgs = object_loss((outputs + 1) / 2, (target + 1) / 2, flow, bboxes).item()
             psnr_list[videos_list[video_num].split('/')[-1]].append(utils.psnr(mse_imgs))
 
         # Measuring the abnormality score and the AUC
