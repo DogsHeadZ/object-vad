@@ -19,10 +19,10 @@ from flownet2.models import FlowNet2
 
 import utils
 from vad_dataloader import VadDataset
-from models.preAE import PreAE
-from models.unet import UNet
-from models.networks import define_G
-from models.pix2pix_networks import PixelDiscriminator
+from vadmodels.preAE import PreAE
+from vadmodels.unet import UNet
+from vadmodels.networks import define_G
+from vadmodels.pix2pix_networks import PixelDiscriminator
 from liteFlownet.lite_flownet import Network, batch_estimate
 from losses import *
 
@@ -261,7 +261,7 @@ def train(config):
 
         generator.eval()
         video_num = 0
-        label_length += videos[videos_list[video_num].split('/')[-1]]['length']
+        label_length = videos[videos_list[video_num].split('/')[-1]]['length']
         for k, imgs in enumerate(tqdm(test_dataloader, desc='test', leave=False)):
             if k == label_length - 4 * (video_num + 1):
                 video_num += 1

@@ -18,13 +18,14 @@ from flownet2.models import FlowNet2
 
 
 import utils
-from vad_dataloader import VadDataset
+
 from vadmodels.preAE import PreAE
 from vadmodels.unet import UNet
 from vadmodels.networks import define_G
 from vadmodels.pix2pix_networks import PixelDiscriminator
 from liteFlownet.lite_flownet import Network, batch_estimate
 from losses import *
+from vad_dataloader_objectflow import VadDataset
 
 import torchvision.transforms as transforms
 
@@ -50,6 +51,8 @@ def train(config):
     writer = SummaryWriter(os.path.join(save_path, 'tensorboard'))
     yaml.dump(config, open(os.path.join(save_path, 'classifier_config.yaml'), 'w'))
 
+    device = torch.device('cuda:' + args.gpu)
+
     #### make datasets ####
     # train
     train_folder = config['dataset_path'] + config['train_dataset_type'] + "/training/frames"
@@ -58,13 +61,17 @@ def train(config):
     # Loading dataset
     train_dataset_args = config['train_dataset_args']
     test_dataset_args = config['test_dataset_args']
-    train_dataset = VadDataset(train_folder, transforms.Compose([
+    train_dataset = VadDataset(args, train_folder, transforms.Compose([
         transforms.ToTensor(),
-    ]), resize_height=train_dataset_args['h'], resize_width=train_dataset_args['w'], time_step=train_dataset_args['t_length'] - 1)
+    ]), resize_height=train_dataset_args['h'], resize_width=train_dataset_args['w'],
+                               dataset=config['train_dataset_type'], time_step=train_dataset_args['t_length'] - 1,
+                               device=device)
 
-    test_dataset = VadDataset(test_folder, transforms.Compose([
+    test_dataset = VadDataset(args, test_folder, transforms.Compose([
         transforms.ToTensor(),
-    ]), resize_height=test_dataset_args['h'], resize_width=test_dataset_args['w'], time_step=test_dataset_args['t_length'] - 1)
+    ]), resize_height=test_dataset_args['h'], resize_width=test_dataset_args['w'],
+                              dataset=config['train_dataset_type'], time_step=test_dataset_args['t_length'] - 1,
+                              device=device)
 
     train_dataloader = DataLoader(train_dataset, batch_size=train_dataset_args['batch_size'],
                                   shuffle=True, num_workers=train_dataset_args['num_workers'], drop_last=True)
@@ -119,7 +126,6 @@ def train(config):
 
     # generator = torch.load('save/avenue_cycle_generator_convlstm_flownet2_0103/generator-epoch-199.pth')
 
-
     discriminator=PixelDiscriminator(train_dataset_args['c'],discriminator_num_filters,use_norm=False)
     # discriminator = torch.load('save/avenue_cycle_generator_convlstm_flownet2_0103/discriminator-epoch-199.pth')
 
@@ -142,6 +148,7 @@ def train(config):
     # here we use no flow loss
     lam_op = 0  # 2.0
     lam_adv = 0.05
+    object_loss = ObjectLoss(device, l_num)
     adversarial_loss = Adversarial_Loss()
     discriminate_loss = Discriminate_Loss()
     gd_loss = Gradient_Loss(alpha, train_dataset_args['c'])
@@ -171,6 +178,7 @@ def train(config):
         generator.cuda()
         discriminator.cuda()
         flow_network.cuda()
+        object_loss.cuda()
         adversarial_loss.cuda()
         discriminate_loss.cuda()
         gd_loss.cuda()
@@ -181,6 +189,7 @@ def train(config):
         generator = nn.DataParallel(generator)
         discriminator = nn.DataParallel(discriminator)
         flow_network = nn.DataParallel(flow_network)
+        object_loss = nn.DataParallel(object_loss)
         adversarial_loss = nn.DataParallel(adversarial_loss)
         discriminate_loss = nn.DataParallel(discriminate_loss)
         gd_loss = nn.DataParallel(gd_loss)
@@ -195,33 +204,15 @@ def train(config):
     for epoch in range(config['epochs']):
 
         generator.train()
-        for j, imgs in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
+        for j, (imgs, bboxes, flow) in enumerate(tqdm(train_dataloader, desc='train', leave=False)):
+
             imgs = imgs.cuda()
             input = imgs[:, :-1, ]
             input_last = input[:, -1, ]
             target = imgs[:, -1, ]
-            # input = input.view(input.shape[0], -1, input.shape[-2],input.shape[-1])
-
-            # only for debug
-            # input0=imgs[:, 0,]
-            # input1 = imgs[:, 1, ]
-            # gt_flow_esti_tensor = torch.cat([input0, input1], 1)
-            # flow_gt = batch_estimate(gt_flow_esti_tensor, flow_network)[0]
-            # objectOutput = open('./out_train.flo', 'wb')
-            # np.array([80, 73, 69, 72], np.uint8).tofile(objectOutput)
-            # np.array([flow_gt.size(2), flow_gt.size(1)], np.int32).tofile(objectOutput)
-            # np.array(flow_gt.detach().cpu().numpy().transpose(1, 2, 0), np.float32).tofile(objectOutput)
-            # objectOutput.close()
-            # break
 
             # ------- update optim_G --------------
             outputs = generator(input)
-            # pred_flow_tensor = torch.cat([input_last, outputs], 1)
-            # gt_flow_tensor = torch.cat([input_last, target], 1)
-            # flow_pred = batch_estimate(pred_flow_tensor, flow_network)
-            # flow_gt = batch_estimate(gt_flow_tensor, flow_network)
-
-            # if you want to use flownet2SD, comment out the part in front
 
             pred_flow_esti_tensor = torch.cat([input_last.view(-1,3,1,input.shape[-2],input.shape[-1]),
                                                outputs.view(-1,3,1,input.shape[-2],input.shape[-1])], 2)
@@ -231,6 +222,7 @@ def train(config):
             flow_gt=flow_network(gt_flow_esti_tensor*255.0)
             flow_pred=flow_network(pred_flow_esti_tensor*255.0)
 
+            g_object_loss = object_loss(outputs, target, flow, bboxes)
             g_adv_loss = adversarial_loss(discriminator(outputs))
             g_op_loss = op_loss(flow_pred, flow_gt)
             g_int_loss = int_loss(outputs, target)
@@ -266,7 +258,7 @@ def train(config):
         generator.eval()
         video_num = 0
         label_length = videos[videos_list[video_num].split('/')[-1]]['length']
-        for k, imgs in enumerate(tqdm(test_dataloader, desc='test', leave=False)):
+        for k, (imgs, bboxes, flow) in enumerate(tqdm(test_dataloader, desc='test', leave=False)):
             if k == label_length - 4 * (video_num + 1):
                 video_num += 1
                 label_length += videos[videos_list[video_num].split('/')[-1]]['length']

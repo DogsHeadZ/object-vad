@@ -592,7 +592,6 @@ class PixelDiscriminator(nn.Module):
         different from ano_pred with norm here
         '''
 
-
         super(PixelDiscriminator, self).__init__()
         if use_norm:
             if type(norm_layer) == functools.partial:  # no need to use bias as BatchNorm2d has affine parameters

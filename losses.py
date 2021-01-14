@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
+import numpy as np
 from torch.autograd import Variable
+
 class Flow_Loss(nn.Module):
     def __init__(self):
         super(Flow_Loss,self).__init__()
@@ -29,7 +31,6 @@ class Gradient_Loss(nn.Module):
 
     def forward(self, gen_frames,gt_frames):
 
-
         # pos=torch.from_numpy(np.identity(channels,dtype=np.float32))
         # neg=-1*pos
         # filter_x=torch.cat([neg,pos]).view(1,pos.shape[0],-1)
@@ -49,13 +50,47 @@ class Gradient_Loss(nn.Module):
 
         return torch.mean(grad_diff_x**self.alpha+grad_diff_y**self.alpha)
 
+
 class Adversarial_Loss(nn.Module):
     def __init__(self):
         super(Adversarial_Loss,self).__init__()
     def forward(self, fake_outputs):
         return torch.mean((fake_outputs-1)**2/2)
+
+
 class Discriminate_Loss(nn.Module):
     def __init__(self):
         super(Discriminate_Loss,self).__init__()
     def forward(self,real_outputs,fake_outputs ):
         return torch.mean((real_outputs-1)**2/2)+torch.mean(fake_outputs**2/2)
+
+
+class ObjectLoss(nn.Module):
+    def __init__(self, device, l_num):
+        super(ObjectLoss, self).__init__()
+        self.device =device
+        self.l_num=l_num
+
+    def forward(self, outputs, target, flow, bboxes):
+        # print(outputs.shape)
+        # print(target.shape)
+        # print(flow.shape)
+        cof = torch.ones((outputs.shape[0], outputs.shape[2], outputs.shape[3])).to(self.device)
+        boxcof = 2
+        flowcof = 2
+        for bbox in bboxes:
+            cof[:, bbox[1]:bbox[3], bbox[0]:bbox[2]] += boxcof
+
+        u = flow[:, 0, :, :]
+        v = flow[:, 1, :, :]
+        rad = (u ** 2 + v ** 2)
+        rad = rad.view(rad.shape[0], -1)
+
+        min = rad.min(1)[0]
+        max = rad.max(1)[0]
+
+        rad = (rad - min) / (max - min)
+
+        cof = torch.mul(cof, flowcof * (1+rad.view(rad.shape[0], flow.shape[-2], flow.shape[-1])))
+
+        return torch.mean(torch.mul(cof, torch.abs((outputs - target) ** self.l_num)))

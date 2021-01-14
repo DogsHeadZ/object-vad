@@ -181,7 +181,6 @@ class VadDataset(data.Dataset):
             # print("object_batch.shape: ", object_batch.shape)
             batch.append(object_batch)
 
-            
             # flow
             object_flow = []
             for i in range(self._time_step+self._num_pred - 1):
