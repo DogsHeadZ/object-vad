@@ -113,17 +113,17 @@ class VadDataset(data.Dataset):
         trans_bboxes = [[int(box[0] * w_ratio), int(box[1] * h_ratio),
                          int(box[2] * w_ratio), int(box[3] * h_ratio)] for box in bboxes]
 
-        if self.flow_folder is not None:  # 已经提取好了，直接读出来
-            last_frame_flow = torch.load(self.videos[video_name]['flow'][frame_name + self._time_step - 1])
-
-        else:
-            last_frame_flow = get_frame_flow(self.videos[video_name]['frame'][frame_name + self._time_step - 1],
-                                             self.videos[video_name]['frame'][frame_name + self._time_step],
-                                             self.flownet,
-                                             self.device, 512, 384)
-        trans_flow = last_frame_flow.unsqueeze(0)
-        trans_flow = F.interpolate(trans_flow, size=([self._resize_width, self._resize_height]), mode='bilinear', align_corners=False)
-        trans_flow = trans_flow.squeeze(0)
+        # if self.flow_folder is not None:  # 已经提取好了，直接读出来
+        #     last_frame_flow = torch.load(self.videos[video_name]['flow'][frame_name + self._time_step - 1])
+        #
+        # else:
+        #     last_frame_flow = get_frame_flow(self.videos[video_name]['frame'][frame_name + self._time_step - 1],
+        #                                      self.videos[video_name]['frame'][frame_name + self._time_step],
+        #                                      self.flownet,
+        #                                      self.device, 512, 384)
+        # trans_flow = last_frame_flow.unsqueeze(0)
+        # trans_flow = F.interpolate(trans_flow, size=([self._resize_width, self._resize_height]), mode='bilinear', align_corners=False)
+        # trans_flow = trans_flow.squeeze(0)
 
         batch = []
         for i in range(self._time_step + self._num_pred):
@@ -133,7 +133,7 @@ class VadDataset(data.Dataset):
                 batch.append(self.transform(image))
         batch = torch.stack(batch, dim=0)
 
-        return batch, trans_bboxes, trans_flow  # 最后即返回这段视频片段大小为[_time_step+num_pred, 图片的通道数, _resize_height, _resize_width]
+        return batch, trans_bboxes  # 最后即返回这段视频片段大小为[_time_step+num_pred, 图片的通道数, _resize_height, _resize_width]
 
     def __len__(self):
         return len(self.samples)
