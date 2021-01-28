@@ -129,7 +129,8 @@ class PreAE(torch.nn.Module):
         self.decoder = Decoder(t_length, n_channel)
 
     def forward(self, x):
+        x = x.view(x.shape[0], -1, x.shape[-2], x.shape[-1])
         fea, skip1, skip2, skip3 = self.encoder(x)
         output = self.decoder(fea, skip1, skip2, skip3)
 
-        return output, fea
+        return output

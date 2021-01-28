@@ -26,7 +26,8 @@ def abnormal_bbox(ground_truth): #计算帧中的异常区域bbox,正常帧返�
 def is_normal_object(ground_truth_bbox, bbox): #判断是否是正常的物体
     if ground_truth_bbox == []:
         return True
-    elif overlap_area(ground_truth_bbox, bbox) / area(bbox) < 0.5:
+    # elif overlap_area(ground_truth_bbox, bbox) / area(bbox) < 0.5:
+    elif overlap_area(ground_truth_bbox, bbox) == 0:
         return True
     else:
         return False
@@ -52,80 +53,80 @@ if __name__ == "__main__":
     yolo = attempt_load("yolov5/weights/yolov5s.pt", map_location=device)  # load FP32 model
 
 
-    # video: ped2/
-    save_dir = "./show_object/ped2"
-    if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
-        os.mkdir(os.path.join(save_dir, "normal"))
-        os.mkdir(os.path.join(save_dir, "abnormal"))
+    # # video: ped2/
+    # save_dir = "./show_object/ped2"
+    # if not os.path.exists(save_dir):
+    #     os.mkdir(save_dir)
+    #     os.mkdir(os.path.join(save_dir, "normal"))
+    #     os.mkdir(os.path.join(save_dir, "abnormal"))
 
-    dataset = "/data0/lyx/VAD_datasets/ped2/testing/frames/"
-    videos = sorted(os.listdir(dataset))
-    videos_ground_truth = "/data0/lyx/VAD_datasets/UCSDped2/Test/"
-    video_ground_truth_list = sorted(glob.glob( os.path.join(videos_ground_truth, "*_gt") ))
-    # print(video_ground_truth_list)
+    # dataset = "/data0/lyx/VAD_datasets/ped2/testing/frames/"
+    # videos = sorted(os.listdir(dataset))
+    # videos_ground_truth = "/data0/lyx/VAD_datasets/UCSDped2/Test/"
+    # video_ground_truth_list = sorted(glob.glob( os.path.join(videos_ground_truth, "*_gt") ))
+    # # print(video_ground_truth_list)
     
-    for index in range(len(videos)):
-        video = os.path.join(dataset, videos[index], "*")
-        frame_list = sorted( glob.glob(video) )
-        # print(frame_list)
-        ground_truth_list = sorted(glob.glob(os.path.join(video_ground_truth_list[index],"*.bmp")))
-        # print(ground_truth_list)
-        img_size = cv2.imread(frame_list[0]).shape[0:2]
+    # for index in range(len(videos)):
+    #     video = os.path.join(dataset, videos[index], "*")
+    #     frame_list = sorted( glob.glob(video) )
+    #     # print(frame_list)
+    #     ground_truth_list = sorted(glob.glob(os.path.join(video_ground_truth_list[index],"*.bmp")))
+    #     # print(ground_truth_list)
+    #     img_size = cv2.imread(frame_list[0]).shape[0:2]
 
-        # get video flow
-        frame_flows = []
-        for i in range( len(frame_list)-1 ):
-            frame_flow = get_frame_flow(frame_list[i], frame_list[i+1], flownet, device, 512, 384)
-            frame_flows.append(frame_flow)
+    #     # get video flow
+    #     frame_flows = []
+    #     for i in range( len(frame_list)-1 ):
+    #         frame_flow = get_frame_flow(frame_list[i], frame_list[i+1], flownet, device, 512, 384)
+    #         frame_flows.append(frame_flow)
 
-        for i in range( len(frame_list)-4 ): #滑窗长度为5
-            ground_truth_bbox = abnormal_bbox( cv2.imread(ground_truth_list[i], cv2.IMREAD_GRAYSCALE) )
+    #     for i in range( len(frame_list)-4 ): #滑窗长度为5
+    #         ground_truth_bbox = abnormal_bbox( cv2.imread(ground_truth_list[i], cv2.IMREAD_GRAYSCALE) )
 
-            # frame roi
-            roi = RoI(frame_list[i:i+5], "ped2" , yolo, device)
-            normal_frame = np.array([[[]]])
-            abnormal_frame = np.array([[[]]])
+    #         # frame roi
+    #         roi = RoI(frame_list[i:i+5], "ped2" , yolo, device)
+    #         normal_frame = np.array([[[]]])
+    #         abnormal_frame = np.array([[[]]])
             
-            for bbox in roi:
-                object_imgs = np_load_frame_roi(frame_list[i], 64, 64, bbox)
-                object_flows = flow_utils.flow2img ( roi_flow(frame_flows[i], bbox, 64, 64, img_size).cpu().numpy().transpose(1,2,0) )
-                # print("object_img.shape: {}, object_flow.shape: {}".format(object_imgs.shape, object_flows.shape))
-                for j in range(1,5):
-                    object_img = np_load_frame_roi(frame_list[i+j], 64, 64, bbox)
-                    object_imgs = np.concatenate([object_imgs, object_img], axis=1 )
-                for j in range(1,4):
-                    object_flow = flow_utils.flow2img (roi_flow(frame_flows[i], bbox, 64, 64, img_size).cpu().numpy().transpose(1,2,0) )
-                    object_flows = np.concatenate([object_flows, object_flow], axis=1 )
-                object_flows = np.concatenate([object_flows, np.zeros([64,64,3])], axis=1 )
-                img = np.vstack((object_imgs, object_flows))
+    #         for bbox in roi:
+    #             object_imgs = np_load_frame_roi(frame_list[i], 64, 64, bbox)
+    #             object_flows = flow_utils.flow2img ( roi_flow(frame_flows[i], bbox, 64, 64, img_size).cpu().numpy().transpose(1,2,0) )
+    #             # print("object_img.shape: {}, object_flow.shape: {}".format(object_imgs.shape, object_flows.shape))
+    #             for j in range(1,5):
+    #                 object_img = np_load_frame_roi(frame_list[i+j], 64, 64, bbox)
+    #                 object_imgs = np.concatenate([object_imgs, object_img], axis=1 )
+    #             for j in range(1,4):
+    #                 object_flow = flow_utils.flow2img (roi_flow(frame_flows[i], bbox, 64, 64, img_size).cpu().numpy().transpose(1,2,0) )
+    #                 object_flows = np.concatenate([object_flows, object_flow], axis=1 )
+    #             object_flows = np.concatenate([object_flows, np.zeros([64,64,3])], axis=1 )
+    #             img = np.vstack((object_imgs, object_flows))
 
-                # save
-                if is_normal_object(ground_truth_bbox, bbox) == True:
-                    try:
-                        normal_frame = np.vstack((normal_frame, img))
-                    except:
-                        normal_frame = img
-                else:
-                    try:
-                        abnormal_frame = np.vstack((abnormal_frame, img))
-                    except:
-                        abnormal_frame = img
+    #             # save
+    #             if is_normal_object(ground_truth_bbox, bbox) == True:
+    #                 try:
+    #                     normal_frame = np.vstack((normal_frame, img))
+    #                 except:
+    #                     normal_frame = img
+    #             else:
+    #                 try:
+    #                     abnormal_frame = np.vstack((abnormal_frame, img))
+    #                 except:
+    #                     abnormal_frame = img
                 
-            normal_path = os.path.join(save_dir, "normal", "ped2_"+ str(videos[index]) + "_" + str(i)+".jpg")
-            abnormal_path = os.path.join(save_dir, "abnormal", "ped2_"+ str(videos[index]) + "_" + str(i)+".jpg")
+    #         normal_path = os.path.join(save_dir, "normal", "ped2_"+ str(videos[index]) + "_" + str(i)+".jpg")
+    #         abnormal_path = os.path.join(save_dir, "abnormal", "ped2_"+ str(videos[index]) + "_" + str(i)+".jpg")
 
-            try:    
-                cv2.imwrite( normal_path, normal_frame)
-            except:
-                pass 
-            try:
-                cv2.imwrite(abnormal_path, abnormal_frame)
-            except:
-                pass 
+    #         try:    
+    #             cv2.imwrite( normal_path, normal_frame)
+    #         except:
+    #             pass 
+    #         try:
+    #             cv2.imwrite(abnormal_path, abnormal_frame)
+    #         except:
+    #             pass 
             
-            print("save ped2 video: {} frame: {}".format(videos[index], i))
-        break
+    #         print("save ped2 video: {} frame: {}".format(videos[index], i))
+    #     break
 
 
 
@@ -154,7 +155,7 @@ if __name__ == "__main__":
         frame_flows = []
         for i in range( len(frame_list)-1 ):
             frame_flow = get_frame_flow(frame_list[i], frame_list[i+1], flownet, device, 512, 384)
-            # cv2.imwrite( "./avenue_flow/test_01_frame_"+str(i) + ".jpg", flow_utils.flow2img(frame_flow.cpu().numpy().transpose(1,2,0)) )
+            cv2.imwrite( "./avenue_flow/test_01_frame_"+str(i) + ".jpg", flow_utils.flow2img(frame_flow.cpu().numpy().transpose(1,2,0)) )
             frame_flows.append(frame_flow)
 
         for i in range( len(frame_list)-4 ): #滑窗长度为5

@@ -47,17 +47,27 @@ def roi_flow(frame_flow, bbox, resize_height, resize_width, img_size):
     (xmin, ymin, xmax, ymax) = bbox
     heigh_coef = frame_flow.shape[1]/img_size[0]
     width_coef = frame_flow.shape[2]/img_size[1]
+    # print("img_size: ", img_size)
+    # print(frame_flow.shape)
 
     xmin = int(xmin*width_coef)
     ymin = int(ymin*heigh_coef)
     xmax = int(xmax*width_coef)
     ymax = int(ymax*heigh_coef)
+    # print(xmin, ymin,xmax, ymax)
+
+    # roi_flow = frame_flow[ymin:ymax, xmin:xmax, :]
+    # print(roi_flow.shape)
     roi_flow = frame_flow[: , ymin:ymax, xmin:xmax] 
+    # transform = transforms.Compose([
+    #     transforms.ToTensor(),
+    # ])
+    # roi_flow = transform(roi_flow)
 
     # print(roi_flow.shape)
     # 没有办法直接resize 所以使用双线性插值
     roi_flow = roi_flow.unsqueeze(0)
-    roi_flow = F.interpolate(roi_flow, size=([resize_width,resize_height]), mode='bilinear', align_corners=False)
+    roi_flow = F.interpolate(roi_flow, size=([resize_width,resize_height]), mode='bilinear', align_corners=True)
     roi_flow = roi_flow.squeeze(0)
 
     return roi_flow

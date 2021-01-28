@@ -84,45 +84,17 @@ def train(config):
         psnr_list[video_name] = []
 
     # Model setting
-    if config['generator'] == 'cycle_generator_convlstm':
-        ngf = 64
-        netG = 'resnet_6blocks'
-        norm = 'instance'
-        no_dropout = False
-        init_type = 'normal'
-        init_gain = 0.02
-        gpu_ids = []
-        model = define_G(train_dataset_args['c'], train_dataset_args['c'],
-                             ngf, netG, norm, not no_dropout, init_type, init_gain, gpu_ids)
-    elif config['generator'] == 'unet':
-        # TODO
-        model = UNet(n_channels=train_dataset_args['c']*(train_dataset_args['t_length']-1),
-                         layer_nums=num_unet_layers, output_channel=train_dataset_args['c'])
-    else:
-        raise Exception('The generator is not implemented')
+    model = PreAE(train_dataset_args['c'], train_dataset_args['t_length'], **config['model_args'])
 
     # optimizer setting
-    params_encoder = list(model.parameters())
-    params_decoder = list(model.parameters())
+    params_encoder = list(model.encoder.parameters())
+    params_decoder = list(model.decoder.parameters())
     params = params_encoder + params_decoder
     optimizer, lr_scheduler = utils.make_optimizer(
         params, config['optimizer'], config['optimizer_args'])
 
-    # set loss, different range with the source version, should change
-    lam_int = 1.0 * 2
-    lam_gd = 1.0 * 2
-    # TODO here we use no flow loss
-    # lam_op = 0  # 2.0
-    # op_loss = Flow_Loss()
-    
-    adversarial_loss = Adversarial_Loss()
-    # # TODO if use adv
-    # lam_adv = 0.05
-    # discriminate_loss = Discriminate_Loss()
-    alpha = 1
-    l_num = 2
-    gd_loss = Gradient_Loss(alpha, train_dataset_args['c'])    
-    int_loss = Intensity_Loss(l_num)
+    # loss_func_mse = nn.MSELoss(reduction='none')
+    loss_func_mse = Intensity_Loss(2)
 
     # parallel if muti-gpus
     if torch.cuda.is_available():
@@ -145,11 +117,10 @@ def train(config):
             target = imgs[:, -1, ]
             outputs = model(input)
             optimizer.zero_grad()
-
-            g_int_loss = int_loss(outputs, target)
-            g_gd_loss = gd_loss(outputs, target)
-            loss = lam_gd * g_gd_loss + lam_int * g_int_loss
-
+            # loss_pixel = torch.mean(loss_func_mse(outputs, target))
+            # loss = loss_pixel
+            loss_pixel = loss_func_mse( (target+1)/2, (outputs+1)/2 )
+            loss = loss_pixel
             loss.backward()
             optimizer.step()
         lr_scheduler.step()
@@ -157,7 +128,7 @@ def train(config):
         utils.log('----------------------------------------')
         utils.log('Epoch:' + str(epoch + 1))
         utils.log('----------------------------------------')
-        utils.log('Loss: Reconstruction {:.6f}'.format(loss.item()))
+        utils.log('Loss: Reconstruction {:.6f}'.format(loss_pixel.item()))
 
         # Testing
         utils.log('Evaluation of ' + config['test_dataset_type'])   
@@ -169,13 +140,13 @@ def train(config):
             if not os.path.exists(os.path.join(save_path, "models")):
                 os.makedirs(os.path.join(save_path, "models")) 
             # TODO
-            frame_AUC, roi_AUC = evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
+            frame_AUC, roi_AUC = evaluate(test_dataloader, model, labels_list, videos, loss_func_mse, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
                 frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
                 is_visual=False, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./final"), labels_dict=labels) 
             
             torch.save(model.state_dict(), os.path.join(save_path, 'models/model-epoch-{}.pth'.format(epoch)))
         else:
-            frame_AUC, roi_AUC = evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
+            frame_AUC, roi_AUC = evaluate(test_dataloader, model, labels_list, videos, loss_func_mse, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
                 frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w']) 
 
         utils.log('The result of ' + config['test_dataset_type'])
@@ -185,13 +156,13 @@ def train(config):
             max_frame_AUC = frame_AUC
             # TODO
             torch.save(model.state_dict(), os.path.join(save_path, 'models/max-frame_auc-model.pth'))
-            evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
+            evaluate(test_dataloader, model, labels_list, videos, loss_func_mse, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
                 frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
                 is_visual=True, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./frame_best"), labels_dict=labels) 
         if roi_AUC > max_roi_AUC:
             max_roi_AUC = roi_AUC
             torch.save(model.state_dict(), os.path.join(save_path, 'models/max-roi_auc-model.pth'))
-            evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
+            evaluate(test_dataloader, model, labels_list, videos, loss_func_mse, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
                 frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
                 is_visual=True, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./roi_best"), labels_dict=labels) 
 

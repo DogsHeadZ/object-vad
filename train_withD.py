@@ -96,17 +96,25 @@ def train(config):
                              ngf, netG, norm, not no_dropout, init_type, init_gain, gpu_ids)
     elif config['generator'] == 'unet':
         # TODO
-        model = UNet(n_channels=train_dataset_args['c']*(train_dataset_args['t_length']-1),
-                         layer_nums=num_unet_layers, output_channel=train_dataset_args['c'])
+        # model = UNet(n_channels=train_dataset_args['c']*(train_dataset_args['t_length']-1),
+        #                  layer_nums=num_unet_layers, output_channel=train_dataset_args['c'])
+        model = PreAE(train_dataset_args['c'], train_dataset_args['t_length'], **config['model_args'])
     else:
         raise Exception('The generator is not implemented')
+
+    num_unet_layers = 4
+    discriminator_num_filters = [128, 256, 512, 512]
+
+    discriminator=PixelDiscriminator(train_dataset_args['c'],discriminator_num_filters,use_norm=False)
 
     # optimizer setting
     params_encoder = list(model.parameters())
     params_decoder = list(model.parameters())
     params = params_encoder + params_decoder
-    optimizer, lr_scheduler = utils.make_optimizer(
+    optimizer_G, lr_scheduler = utils.make_optimizer(
         params, config['optimizer'], config['optimizer_args'])
+    
+    optimizer_D = torch.optim.Adam(discriminator.parameters(),lr=0.00002)
 
     # set loss, different range with the source version, should change
     lam_int = 1.0 * 2
@@ -116,9 +124,9 @@ def train(config):
     # op_loss = Flow_Loss()
     
     adversarial_loss = Adversarial_Loss()
-    # # TODO if use adv
-    # lam_adv = 0.05
-    # discriminate_loss = Discriminate_Loss()
+    # TODO if use adv
+    lam_adv = 0.05
+    discriminate_loss = Discriminate_Loss()
     alpha = 1
     l_num = 2
     gd_loss = Gradient_Loss(alpha, train_dataset_args['c'])    
@@ -127,9 +135,10 @@ def train(config):
     # parallel if muti-gpus
     if torch.cuda.is_available():
         model.cuda()
+        discriminator.cuda()
     if config.get('_parallel'):
         model = nn.DataParallel(model)
-
+        discriminator = nn.DataParallel(discriminator)
     # Training
     utils.log('Start train')
     max_frame_AUC, max_roi_AUC = 0,0
@@ -144,23 +153,33 @@ def train(config):
             input = imgs[:, :-1, ]
             target = imgs[:, -1, ]
             outputs = model(input)
-            optimizer.zero_grad()
 
+            g_adv_loss = adversarial_loss(discriminator(outputs))            
             g_int_loss = int_loss(outputs, target)
             g_gd_loss = gd_loss(outputs, target)
-            loss = lam_gd * g_gd_loss + lam_int * g_int_loss
+            g_loss = lam_adv * g_adv_loss + lam_gd * g_gd_loss + lam_int * g_int_loss
 
-            loss.backward()
-            optimizer.step()
+            optimizer_G.zero_grad()
+            g_loss.backward()
+            optimizer_G.step()
+
+            train_psnr = utils.psnr_error(outputs,target)
+
+            # ----------- update optim_D -------
+            optimizer_D.zero_grad()
+            d_loss = discriminate_loss(discriminator(target), discriminator(outputs.detach()))
+            d_loss.backward()
+            optimizer_D.step()
         lr_scheduler.step()
 
         utils.log('----------------------------------------')
         utils.log('Epoch:' + str(epoch + 1))
         utils.log('----------------------------------------')
-        utils.log('Loss: Reconstruction {:.6f}'.format(loss.item()))
+        utils.log('Loss: Reconstruction {:.6f}'.format(g_loss.item()))
 
         # Testing
         utils.log('Evaluation of ' + config['test_dataset_type'])   
+
 
         # Save the model
         if epoch % save_epoch == 0 or epoch == config['epochs'] - 1:
@@ -185,15 +204,15 @@ def train(config):
             max_frame_AUC = frame_AUC
             # TODO
             torch.save(model.state_dict(), os.path.join(save_path, 'models/max-frame_auc-model.pth'))
-            evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
-                frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
-                is_visual=True, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./frame_best"), labels_dict=labels) 
+            # evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
+            #     frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
+            #     is_visual=True, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./frame_best"), labels_dict=labels) 
         if roi_AUC > max_roi_AUC:
             max_roi_AUC = roi_AUC
             torch.save(model.state_dict(), os.path.join(save_path, 'models/max-roi_auc-model.pth'))
-            evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
-                frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
-                is_visual=True, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./roi_best"), labels_dict=labels) 
+            # evaluate(test_dataloader, model, labels_list, videos, int_loss, config['test_dataset_type'], test_bboxes=config['test_bboxes'],
+            #     frame_height = train_dataset_args['h'], frame_width=train_dataset_args['w'], 
+            #     is_visual=True, mask_labels_path = config['mask_labels_path'], save_path = os.path.join(save_path, "./roi_best"), labels_dict=labels) 
 
         utils.log('----------------------------------------')
 
