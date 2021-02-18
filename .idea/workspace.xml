@@ -20,88 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9c1d418-c6e6-4de3-9ca2-acacedecdc17" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OCSVM.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/vad_baseline.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/vad_object.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/vad_object_zwh.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/vad_pre.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/vad_pre_baseline.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/frame_labels_avenue.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/frame_labels_ped2.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/frame_labels_shanghai.npy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluate.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/getFlow.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/getROI.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/label.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/correlation/correlation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/color_flow" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/color_flow.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/colorcode.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/colorcode.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/colortest" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/colortest.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/flowIO.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/flowIO.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Convert.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Convert.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Convert.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Convolve.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Convolve.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Convolve.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Copyright.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Error.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Image.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Image.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Image.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/ImageIO.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/ImageIO.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/ImageIO.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/ImageIOpng.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/ImageIOpng.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/README.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/RefCntMem.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/RefCntMem.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/RefCntMem.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/imageLib.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/imageLib/libImg.a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/out/flow_r.flo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow-code/out/flow_r.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/flow_vis.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/0009.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/0010.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/005.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/006.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/first.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/images/second.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/lite_flownet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteFlownet/testFlow.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/losses.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/readmat.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_abnormal_object.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/show_all_object.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testgrammar.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_pre.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_pre_baseline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_pre_convlstm.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_pre_objectloss.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vad_dataloader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vad_dataloader_frameobject.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vad_dataloader_object.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vad_dataloader_objectflow.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vadmodels/convlstm.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vadmodels/networks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vadmodels/pix2pix_networks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vadmodels/preAE.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vadmodels/unet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/getFlow.py" beforeDir="false" afterPath="$PROJECT_DIR$/getFlow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/getROI.py" beforeDir="false" afterPath="$PROJECT_DIR$/getROI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vad_dataloader_frameflow.py" beforeDir="false" afterPath="$PROJECT_DIR$/vad_dataloader_frameflow.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -317,7 +240,7 @@
       <workItem from="1611110083548" duration="125000" />
       <workItem from="1611913479846" duration="2812000" />
       <workItem from="1613617224099" duration="93000" />
-      <workItem from="1613617331412" duration="2266000" />
+      <workItem from="1613617331412" duration="4487000" />
     </task>
     <task id="LOCAL-00001" summary="first version for PreAE">
       <created>1608211331924</created>
@@ -473,7 +396,21 @@
       <option name="project" value="LOCAL" />
       <updated>1610869280466</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="lyx_objectvad">
+      <created>1613620704108</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1613620704108</updated>
+    </task>
+    <task id="LOCAL-00024" summary="lyx_objectvad">
+      <created>1613620733757</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1613620733757</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -511,7 +448,8 @@
     <MESSAGE value="Merge branch 'zwh_pre' into zwh_object" />
     <MESSAGE value="add object loss in training" />
     <MESSAGE value="add train_pre_baseline, modify object dataloader" />
-    <option name="LAST_COMMIT_MESSAGE" value="add train_pre_baseline, modify object dataloader" />
+    <MESSAGE value="lyx_objectvad" />
+    <option name="LAST_COMMIT_MESSAGE" value="lyx_objectvad" />
   </component>
   <component name="WindowStateProjectService">
     <state x="420" y="168" key="#Deployment" timestamp="1611919140610">
@@ -537,9 +475,10 @@
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state x="2141" y="346" key="#com.intellij.fileTypes.FileTypeChooser/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1609134079612" />
-    <state x="1994" y="0" key="CommitChangelistDialog2" timestamp="1610869280270">
-      <screen x="1440" y="0" width="1920" height="1080" />
+    <state x="416" y="0" key="CommitChangelistDialog2" timestamp="1613620733600">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="416" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1613620733600" />
     <state x="1994" y="0" key="CommitChangelistDialog2/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610869280270" />
     <state x="1994" y="121" key="CommitChangelistDialog2/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1608879068235" />
     <state x="2088" y="166" key="DiffContextDialog" timestamp="1610501616036">
@@ -615,10 +554,10 @@
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state x="1909" y="176" key="SettingsEditor/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610514333889" />
-    <state x="420" y="231" key="Vcs.Push.Dialog.v2" timestamp="1611998209240">
+    <state x="420" y="231" key="Vcs.Push.Dialog.v2" timestamp="1613624005985">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="420" y="231" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1611998209240" />
+    <state x="420" y="231" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1613624005985" />
     <state x="2000" y="277" key="Vcs.Push.Dialog.v2/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1610869290612" />
     <state x="2000" y="277" key="Vcs.Push.Dialog.v2/1440.0.1920.1080/0.25.1440.875@1440.0.1920.1080" timestamp="1608879078503" />
     <state x="2187" y="278" key="VcsDiffUtil.ChangesDialog" timestamp="1610501728871">

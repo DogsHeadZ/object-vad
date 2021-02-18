@@ -69,8 +69,8 @@ if __name__ == '__main__':
     # # print( readFlow('flow/flow1.npy') )
 
     # 计算所有图像的flow
-    videos = "/data0/lyx/VAD_datasets/ped2/testing/frames"
-    save_path = "./flow/ped2/test"
+    videos = "../AllDatasets/avenue/training/frames"
+    save_path = "./flow/avenue/train"
     video_list = sorted(os.listdir(videos))
     for video in video_list:
         frame_list = sorted(os.listdir(os.path.join(videos, video)))

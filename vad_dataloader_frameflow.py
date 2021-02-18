@@ -157,7 +157,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     batch_size = 1
-    datadir = "/data0/lyx/VAD_datasets/ped2/testing/frames"
+    datadir = "../AllDatasets/ped2/testing/frames"
     device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
 
     # flow 和 yolo 在线计算
