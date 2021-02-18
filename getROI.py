@@ -227,14 +227,14 @@ if __name__=="__main__":
     device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
     model = attempt_load(weights, map_location=device)  # load FP32 model
 
-    frame_path = "../AllDatasets/ped2/training/frames" # frame path
+    frame_path = "../AllDatasets/avenue/testing/frames" # frame path
     clips = os.listdir(frame_path)
 
     # 记录bounding boxes
     for clip in clips:
         path = os.path.join(frame_path,clip)
         filenames = os.listdir(path)  
-        save_file = "./bboxes/ped2/train/"+ str(clip)+".npy"
+        save_file = "./bboxes/avenue/test/"+ str(clip)+".npy"
         clips_roi = []
         #读取图片开始预测
         for index in range(2,len(filenames)-2):       

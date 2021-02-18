@@ -69,8 +69,8 @@ if __name__ == '__main__':
     # # print( readFlow('flow/flow1.npy') )
 
     # 计算所有图像的flow
-    videos = "../AllDatasets/avenue/training/frames"
-    save_path = "./flow/avenue/train"
+    videos = "../AllDatasets/avenue/testing/frames"
+    save_path = "./flow/avenue/test"
     video_list = sorted(os.listdir(videos))
     for video in video_list:
         frame_list = sorted(os.listdir(os.path.join(videos, video)))
