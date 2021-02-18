@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="feihuqaq102">
+  <component name="PublishConfigData" serverName="10.15.198.102">
     <serverData>
-      <paths name="feihuqaq102">
+      <paths name="10.15.198.102">
         <serverdata>
           <mappings>
             <mapping deploy="/data1/feihuqaq/object-vad" local="$PROJECT_DIR$" web="/" />
-            <mapping deploy="" local="" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/flownet2" />
-            <excludedPath local="true" path="$PROJECT_DIR$/yolov5" />
             <excludedPath local="true" path="$PROJECT_DIR$/liteFlownet" />
           </excludedPaths>
         </serverdata>
