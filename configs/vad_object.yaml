@@ -1,0 +1,15 @@
+dataset_path: /data0/lyx/VAD_datasets/
+train_dataset_type: avenue
+train_dataset_args: {augment: aug1, h: 64, w: 64, c: 3, t_length: 5, batch_size: 32, num_workers: 0}
+test_dataset_type: avenue
+test_dataset_args: {augment: aug1, h: 64, w: 64, c: 3, t_length: 5, batch_size: 1, num_workers: 0}
+
+model: nmad
+model_args: {memory_size: 10, feature_dim: 512, key_dim: 512}
+
+optimizer: Adam
+optimizer_args: {lr: 0.0002, weight_decay: 0, lr_scheduler: CosineAnnealingLR, T_max: 60}
+
+epochs: 60
+
+save_epoch: 5

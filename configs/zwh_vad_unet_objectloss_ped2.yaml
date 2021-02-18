@@ -1,0 +1,29 @@
+dataset_path: ../AllDatasets/
+train_dataset_type: ped2
+train_dataset_args: {augment: aug1, h: 256, w: 256, c: 3, t_length: 5, batch_size: 1, num_workers: 0}
+test_dataset_type: ped2
+test_dataset_args: {augment: aug1, h: 256, w: 256, c: 3, t_length: 5, batch_size: 1, num_workers: 0}
+
+generator: unet
+flow_model: flownet2
+model_args: {memory_size: 10, feature_dim: 512, key_dim: 512}
+
+use_D: False
+
+label_path: ./data/ped2_frame_labels.mat
+mask_labels_path: ./data/ped2_mask_labels
+
+train_bboxes_path: ./bboxes/ped2/train
+test_bboxes_path: ./bboxes/ped2/test
+train_flow_path: ./flow/ped2/train
+test_flow_path: ./flow/ped2/test
+
+save_path: ./save/ped2_unet_objectloss
+
+
+optimizer: Adam
+optimizer_args: {lr: 0.0002, weight_decay: 0, lr_scheduler: CosineAnnealingLR, T_max: 100}
+
+epochs: 100
+
+save_epoch: 5
